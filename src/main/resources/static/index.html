@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="js/jquery3.5.1.js"></script>
+</head>
+<body>
+<textarea id="content" cols="80" rows="5"></textarea>
+
+<textarea id="message" cols="80" rows="5" placeholder="请输入消息"></textarea>
+<div>
+    <button id="toSend">发送</button>
+    <button id="exit">离开</button>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        let ws;
+        if("WebSocket" in window){
+            let baseUrl = 'ws://localhost:8443/websocket/123';
+            ws = new WebSocket(baseUrl);
+
+            ws.onopen = function(){
+                console.log("建立websocket连接。。。");
+            };
+            ws.onmessage = function(event){
+                $('#content').append(event.data+'\n\n');
+                console.log("接收到服务器发送的消息。。。" + event.data);
+            };
+            ws.onerror=function(event){
+                console.log("websocket发送错误" + event);
+            };
+            ws.onclose=function(){
+                $('#content').append('[已离开]');
+                console.log("关闭websocket连接");
+            }
+        }else{
+            alert("你的浏览器不支持websocket")
+        }
+
+        $('#toSend').click(function(){
+            ws.send($('#message').val());
+        });
+
+        $('#exit').click(function(){
+            if(ws){
+                ws.close()
+            }
+        })
+
+
+    });
+</script>
+</body>
+</html>
