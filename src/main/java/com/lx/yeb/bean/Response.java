@@ -1,30 +1,30 @@
 package com.lx.yeb.bean;
 
 public class Response{
-    private Integer resCode; //返回码
-    private String  resMessage; //返回状态消息
+    private Integer flag; //返回码
+    private String  info; //返回状态消息
     private Object  data; //返回数据
 
-    public Response(Integer resCode, String resMessage, Object data){
-        this.resCode = resCode;
-        this.resMessage = resMessage;
+    public Response(Integer flag, String info, Object data){
+        this.flag = flag;
+        this.info = info;
         this.data = data;
     }
 
-    public String getResMessage(){
-        return resMessage;
+    public String getInfo(){
+        return info;
     }
 
-    public void setResMessage(String resMessage){
-        this.resMessage = resMessage;
+    public void setInfo(String info){
+        this.info = info;
     }
 
-    public Integer getResCode(){
-        return resCode;
+    public Integer getFlag(){
+        return flag;
     }
 
-    public void setResCode(Integer resCode){
-        this.resCode = resCode;
+    public void setFlag(Integer flag){
+        this.flag = flag;
     }
 
     public Object getData(){
@@ -33,5 +33,10 @@ public class Response{
 
     public void setData(Object data){
         this.data = data;
+    }
+
+    @Override
+    public String toString(){
+        return "Response{" + "flag=" + flag + ", info='" + info + '\'' + ", data=" + data + '}';
     }
 }

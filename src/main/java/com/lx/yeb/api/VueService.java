@@ -2,11 +2,13 @@ package com.lx.yeb.api;
 
 import com.lx.yeb.bean.Navigation;
 import com.lx.yeb.bean.User;
+import com.lx.yeb.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,15 +17,19 @@ import java.util.List;
 public class VueService{
     Logger logger = LoggerFactory.getLogger(VueService.class);
 
+    @Resource
+    private UserService userService;
+
     @RequestMapping("/login")
     public Object login(){
         logger.info("[前端接口调用]: /api/login");
+        List<User> list = userService.selectUser();
+        logger.info(list.toString());
         return new User("lp", "lipan", "1234");
     }
 
     @RequestMapping("/nav")
     public Object navigationBar(){
-
         logger.error("[前端接口调用]: /api/nav");
         List<Navigation> nav = new ArrayList<>();
 

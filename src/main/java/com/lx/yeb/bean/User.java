@@ -34,4 +34,9 @@ public class User{
     public void setCaptcha(String captcha){
         this.captcha = captcha;
     }
+
+    @Override
+    public String toString(){
+        return "User{" + "username='" + username + '\'' + ", password='" + password + '\'' + ", captcha='" + captcha + '\'' + '}';
+    }
 }

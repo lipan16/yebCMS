@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lx.yeb.dao.UserDao">
+    <select id="selectAllUser" resultType="com.lx.yeb.bean.User">
+        select id, username, birthday, sex, address
+        from user
+        order by id
+    </select>
+
+    <select id="selectUserById" parameterType="java.lang.Integer" resultType="com.lx.yeb.bean.User">
+        select id, username, birthday, sex, address
+        from user
+        where id = #{id}
+    </select>
+
+    <select id="selectUserBy2Param" resultType="com.lx.yeb.bean.User">
+        select id, username, birthday, sex, address
+        from user
+        where username like #{myName} or address = "%"#{myAddress}"%"
+    </select>
+
+
+    <select id="selectUserByObject" resultType="com.lx.yeb.bean.User">
+        select id, username, birthday, sex, address
+        from user
+        where username like "%"#{username}"%" or address = "%"#{address}"%"
+    </select>
+
+    <select id="countUser" resultType="int">
+        select count(id) from user
+    </select>
+
+    <select id="selectUserMapById" resultType="java.util.HashMap">
+        select id, username, sex from user where id = #{id}
+        <if test="1==1">
+            and id = #{id}
+        </if>
+    </select>
+
+    <insert id="insertUser">
+        insert into user(username, birthday, sex, address)
+        values (#{username}, #{birthday}, #{sex}, #{address})
+    </insert>
+</mapper>

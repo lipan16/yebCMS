@@ -33,6 +33,7 @@ build/
 .vscode/
 
 *.log
+*.gz
 mvnw
 mvnw.cmd
 .mvn

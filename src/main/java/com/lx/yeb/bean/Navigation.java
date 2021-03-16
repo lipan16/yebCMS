@@ -68,4 +68,9 @@ public class Navigation{
     public void setChildren(List<Navigation> children){
         this.children = children;
     }
+
+    @Override
+    public String toString(){
+        return "Navigation{" + "path='" + path + '\'' + ", name='" + name + '\'' + ", component='" + component + '\'' + ", hidden=" + hidden + ", icon='" + icon + '\'' + ", children=" + children + '}';
+    }
 }
