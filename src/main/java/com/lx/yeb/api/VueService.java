@@ -3,10 +3,9 @@ package com.lx.yeb.api;
 import com.lx.yeb.bean.Navigation;
 import com.lx.yeb.bean.User;
 import com.lx.yeb.service.LoginService;
-import com.lx.yeb.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -16,21 +15,21 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class VueService{
-    Logger logger = LoggerFactory.getLogger(VueService.class);
 
     @Resource
     private LoginService loginService;
 
-    @RequestMapping("/login")
+    @RequestMapping(path="/login",method = RequestMethod.GET)
     public Object login(HttpServletRequest request, HttpServletResponse response, HttpSession session){
-        logger.info("[前端接口调用]: /api/login");
+        log.info("[前端接口调用]: /api/login");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        logger.info(username, password);
+        log.info(username, password);
         boolean verifying = loginService.verifyLogin(username, password);
         if(verifying){
             return new User("lipan", "lipan");
@@ -41,7 +40,7 @@ public class VueService{
 
     @RequestMapping("/nav")
     public Object navigationBar(){
-        logger.error("[前端接口调用]: /api/nav");
+        log.error("[前端接口调用]: /api/nav");
         List<Navigation> nav = new ArrayList<>();
 
         nav.add(new Navigation("/", "登录", "() => import('../views/login/login.vue')", true, "", null));
