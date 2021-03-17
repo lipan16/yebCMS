@@ -5,9 +5,15 @@
 
 <mapper namespace="com.lx.yeb.dao.UserDao">
     <select id="selectAllUser" resultType="com.lx.yeb.bean.User">
-        select id, username, birthday, sex, address
+        select userid, username, password
         from user
-        order by id
+        order by userid
+    </select>
+
+    <select id="verifyLogin" resultType="com.lx.yeb.bean.User">
+        select userid, username, password
+        from user
+        where username = #{username} and password = #{password}
     </select>
 
     <select id="selectUserById" parameterType="java.lang.Integer" resultType="com.lx.yeb.bean.User">

@@ -1,14 +1,23 @@
 package com.lx.yeb.bean;
 
 public class User{
+    private Integer userId;
     private String username;
     private String password;
-    private String captcha;
 
-    public User(String username, String password, String captcha){
+    public User(String username, String password){
         this.username = username;
         this.password = password;
-        this.captcha = captcha;
+    }
+
+    public User(Integer userId, String username, String password){
+        this.userId = userId;
+        this.username = username;
+        this.password = password;
+    }
+
+    public Integer getUserId(){
+        return userId;
     }
 
     public String getUsername(){
@@ -27,16 +36,8 @@ public class User{
         this.password = password;
     }
 
-    public String getCaptcha(){
-        return captcha;
-    }
-
-    public void setCaptcha(String captcha){
-        this.captcha = captcha;
-    }
-
     @Override
     public String toString(){
-        return "User{" + "username='" + username + '\'' + ", password='" + password + '\'' + ", captcha='" + captcha + '\'' + '}';
+        return "User{" + "userId=" + userId + ", username='" + username + '\'' + ", password='" + password + '\'' + '}';
     }
 }
