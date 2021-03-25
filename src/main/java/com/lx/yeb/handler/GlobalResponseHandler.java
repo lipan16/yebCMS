@@ -1,6 +1,5 @@
 package com.lx.yeb.handler;
 
-import com.lx.yeb.bean.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -18,13 +17,14 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object>{
 
     @Override
     public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> aClass){
+        log.info("---启用ResponseBodyAdvice拦截---");
         return true;
     }
 
     // 拦截response输出处理
     @Override
     public Object beforeBodyWrite(Object o, MethodParameter methodParameter, MediaType mediaType, Class<? extends HttpMessageConverter<?>> aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse){
-        log.info("开始拦截response返回请求");
-        return new Response(1, "成功", o);
+        log.info("ResponseBodyAdvice开始拦截response返回请求: {}", o);
+        return o;
     }
 }

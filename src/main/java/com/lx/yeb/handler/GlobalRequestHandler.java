@@ -1,5 +1,6 @@
 package com.lx.yeb.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -12,10 +13,12 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 
 // 拦截request请求处理
+@Slf4j
 @ControllerAdvice(annotations = {Controller.class, RestController.class})
 public class GlobalRequestHandler implements RequestBodyAdvice{
     @Override
     public boolean supports(MethodParameter methodParameter, Type type, Class<? extends HttpMessageConverter<?>> aClass){
+        log.info("---启用RequestBodyAdvice拦截---");
         return false;
     }
 
