@@ -1,12 +1,12 @@
 package com.lx.yeb.utils;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.auth0.jwt.interfaces.JWTVerifier;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,73 +18,66 @@ import java.util.Map;
  * @Date 2021/3/17 15:26
  * @Version 1.0
  */
+@Slf4j
 public class JwtUtil{
     // 密钥
-    private static final String SECRET     = "suokou@hunan";
-    // 过期时间（单位：秒）
-    private static final long   EXPIRATION = 3600L;
+    private static String SECRET     = "suokou@hunan";
+    // 过期时间 30min
+    private static long   EXPIRATION = 1 * 1000 * 60;
 
     /**
      * fetch 创建token
      *
-     * @param userId, username, password
+     * @param userId, username
      * @return java.lang.String
      * @author lipan
      * @date 2021/3/17 15:43
      */
+    public static String createToken(Integer userId, String username){
+        Map<String, Object> map = new HashMap<>(4);
+        map.put("userid", userId);
+        map.put("username", username);
 
-    public static String createToken(Integer userId, String username, String password){
-        Map<String, Object> map = new HashMap<>();
-        map.put("alg", "HS256");
-        map.put("typ", "JWT");
-        String token = JWT.create()
-                          // 添加头部
-                          .withHeader(map)
-                          // 放入用户的id
-                          .withAudience(String.valueOf(userId))
-                          // 可以将基本信息放到claims中
-                          .withClaim("username", username).withClaim("password", password)
-                          // 超时设置,设置过期的日期
-                          .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION * 1000))
-                          // 签发时间
-                          .withIssuedAt(new Date())
-                          // SECRET加密
-                          .sign(Algorithm.HMAC256(SECRET));
+        long time       = System.currentTimeMillis();
+        Date now        = new Date(time);
+        Date expireTime = new Date(time + EXPIRATION);
+
+        String token = Jwts.builder()
+                           .setClaims(map)
+                           .setIssuedAt(now)
+                           .setExpiration(expireTime)
+                           .signWith(SignatureAlgorithm.HS512, SECRET.getBytes(StandardCharsets.UTF_8))
+                           .compact();
+        log.info("token生成成功：{}", token);
+        log.info("token过期时间：{}", expireTime);
         return token;
-    }
-
-    /**
-     * fetch 校验token
-     * @param token
-     * @return boolean
-     * @author lipan
-     * @date 2021/3/17 15:46
-     */
-    public static boolean verifyToken(String token){
-        try{
-            JWTVerifier verifier   = JWT.require(Algorithm.HMAC256(SECRET)).build();
-            DecodedJWT  decodedJWT = verifier.verify(token);
-            return null != decodedJWT;
-        }catch(JWTVerificationException e){
-            // e.printStackTrace();
-            return false;
-        }
     }
 
 
     /**
      * fetch 获取Token信息
+     *
      * @param token
-     * @return com.auth0.jwt.interfaces.DecodedJWT
+     * @return com.lx.yeb.vo.UserTokenVO
      * @author lipan
-     * @date 2021/3/17 15:55
+     * @date 2021/3/18 16:15
      */
-    public static DecodedJWT getTokenInfo(String token){
+    public static ResultCodeEnum getTokenInfo(String token){
         try{
-            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SECRET)).build();
-            return verifier.verify(token);
+            Claims body = Jwts.parser()
+                              .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
+                              .parseClaimsJws(token)
+                              .getBody();
+
+            Integer userid   = Integer.parseInt(body.get("userid").toString());
+            String  username = body.get("username").toString();
+            return ResultCodeEnum.SUCCESS;
+        }catch(ExpiredJwtException e){ // token已过期
+            log.error("token已过期");
+            return ResultCodeEnum.TOKEN_HAS_EXPIRED;
         }catch(Exception e){
-            throw new RuntimeException(e);
+            log.error("token解析失败", e);
+            return ResultCodeEnum.TOKEN_ERROR;
         }
     }
 }
