@@ -1,16 +1,16 @@
-package com.lx.yeb.bean;
+package com.lx.yeb.vo;
 
 import lombok.Data;
 
 /**
- * @ClassName User
- * @Description 用户信息
+ * @ClassName UserVO
+ * @Description 前端传给后端接口对象
  * @Author lipan
- * @Date 2021/3/18 10:01
+ * @Date 2021/3/21 17:11
  * @Version 1.0
  */
 @Data
-public class User{
+public class UserVO{
     private Integer userid;
     private String  username;
     private String  password;

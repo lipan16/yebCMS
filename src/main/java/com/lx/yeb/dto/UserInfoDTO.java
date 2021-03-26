@@ -1,6 +1,5 @@
 package com.lx.yeb.dto;
 
-import com.lx.yeb.bean.User;
 import lombok.Data;
 
 /**
@@ -11,6 +10,11 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
-public class UserInfoDTO extends User{
+public class UserInfoDTO{
+    private Integer userid;
+    private String username;
+    private String password;
+    private String icon;
+    private String authority;
     private String token;
 }
