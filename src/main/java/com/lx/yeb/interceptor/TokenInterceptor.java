@@ -6,8 +6,6 @@ import com.lx.yeb.utils.ResultCodeEnum;
 import com.lx.yeb.utils.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Objects;
 
 /**
  * @ClassName TokenInterceptor
@@ -32,6 +29,7 @@ public class TokenInterceptor implements HandlerInterceptor{
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception{
         log.info("token拦截器TokenInterceptor--->方法执行前");
+
         // 忽略带JwtIgnore注解的请求, 不做后续token认证校验
         if(handler instanceof HandlerMethod){
             HandlerMethod handlerMethod = (HandlerMethod) handler;
@@ -45,14 +43,16 @@ public class TokenInterceptor implements HandlerInterceptor{
         String authorization = request.getHeader("Authorization");
         if(!StringUtils.hasText(authorization)){
             log.info("用户未登录，请先登录");
-            writeContent(ResultUtil.result(ResultCodeEnum.USER_NOT_LOGIN));
+            writeContent(response, ResultUtil.result(ResultCodeEnum.USER_NOT_LOGIN));
+            //直接返回前端
             return false;
         }
-        ResultCodeEnum resultCodeEnum = JwtUtil.getTokenInfo(authorization);
 
+        ResultCodeEnum resultCodeEnum = JwtUtil.getTokenInfo(authorization);
         // 解析token失败或者token已失效
         if(resultCodeEnum != ResultCodeEnum.SUCCESS){
-            writeContent(ResultUtil.error(resultCodeEnum));
+            writeContent(response, ResultUtil.error(resultCodeEnum));
+            //直接返回前端
             return false;
         }
         return true;
@@ -79,10 +79,7 @@ public class TokenInterceptor implements HandlerInterceptor{
      * @author lipan
      * @date 2021/3/19 11:52
      */
-    private void writeContent(String content){
-        HttpServletResponse response = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder
-                .getRequestAttributes())).getResponse();
-        Objects.requireNonNull(response).reset();
+    private void writeContent(HttpServletResponse response, String content){
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Content-Type", "application/json;charset=UTF-8");
         try(PrintWriter writer = response.getWriter()){

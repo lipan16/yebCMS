@@ -18,10 +18,17 @@
     </properties>
     <dependencies>
 
+        <!--web依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
+        <!--security依赖-->
+        <!--<dependency>-->
+        <!--    <groupId>org.springframework.boot</groupId>-->
+        <!--    <artifactId>spring-boot-starter-security</artifactId>-->
+        <!--</dependency>-->
 
         <!--spring boot websocket依赖-->
         <dependency>

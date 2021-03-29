@@ -4,16 +4,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.lx.yeb.dao.UserDao">
-    <select id="selectAllUser" resultType="com.lx.yeb.bean.User">
-        select userid, username, password
-        from user
-        order by userid
+    <select id="existUser" resultType="int">
+        select ifnull((select 1 from user where username = #{username}), 0)
     </select>
 
     <select id="verifyLogin" resultType="com.lx.yeb.bean.User">
-        select userid, username, password
+        select userid, username, password, icon, authority
         from user
-        where username = #{username} and password = #{password}
+        where username = #{username}
+          and password = #{password}
     </select>
 
     <select id="selectUserById" parameterType="java.lang.Integer" resultType="com.lx.yeb.bean.User">
@@ -25,7 +24,8 @@
     <select id="selectUserBy2Param" resultType="com.lx.yeb.bean.User">
         select id, username, birthday, sex, address
         from user
-        where username like #{myName} or address = "%"#{myAddress}"%"
+        where username like #{myName}
+           or address = "%"#{myAddress}"%"
     </select>
 
 
@@ -36,7 +36,8 @@
     </select>
 
     <select id="countUser" resultType="int">
-        select count(id) from user
+        select count(id)
+        from user
     </select>
 
     <select id="selectUserMapById" resultType="java.util.HashMap">
