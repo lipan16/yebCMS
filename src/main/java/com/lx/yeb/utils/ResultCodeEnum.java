@@ -17,6 +17,10 @@ public enum ResultCodeEnum{
     USER_NOT_LOGIN(1006, "用户未登录"),
     TOKEN_ERROR(1007, "token解析异常"),
     TOKEN_HAS_EXPIRED(1008, "token过期"),
+    TOKEN_REFRESH_FAILED(1009, "token刷新失败"),
+    VERIFICATION_BE_REQUIRED(1010, "验证码不能为空"),
+    VERIFICATION_EXPIRED(1011, "验证码已过期，请刷新验证码"),
+    VERIFICATION_FAILED(1012, "验证码校验失败，请重新输入"),
     FAILURE(9999, "fail");
 
     //结果状态码

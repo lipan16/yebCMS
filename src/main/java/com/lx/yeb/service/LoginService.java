@@ -29,4 +29,13 @@ public interface LoginService{
      * @return java.lang.String
      */
     String refreshToken(User user);
+
+    /**
+     * fetch 返回当前用户的导航栏
+     * @author lipan
+     * @date 2021/3/29 16:23
+     * @param user
+     * @return java.lang.String
+     */
+    String menu(User user);
 }

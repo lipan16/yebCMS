@@ -11,9 +11,20 @@ import lombok.Data;
  */
 @Data
 public class UserVO{
+    /**
+     * 用户id
+     * 用户名
+     * 密码
+     * 头像
+     * 权限
+     * 验证码
+     */
+
     private Integer userid;
     private String  username;
     private String  password;
     private String  icon;
     private String  authority;
+    private String  verifyCode;
+
 }

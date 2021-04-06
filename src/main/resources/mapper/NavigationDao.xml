@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lx.yeb.dao.NavigationDao">
+    <select id="selectByParentId" resultType="com.lx.yeb.bean.Navigation">
+        select id,
+               url,
+               name,
+               path,
+               component,
+               icon,
+               enabled,
+               keepAlive,
+               requireAuth,
+               parentId
+        from menu where parentId = #{parentId}
+    </select>
+</mapper>
