@@ -69,6 +69,15 @@ public class LoginServiceApi{
         return loginService.verifyLogin(user);
     }
 
+
+
+    @ApiOperation(value = "退出登录")
+    @PostMapping("/logout")
+    public String logout(){
+        log.info("注销成功");
+        return ResultUtil.ok(ResultCodeEnum.SUCCESS_LOGOUT);
+    }
+
     @ApiOperation(value = "刷新token")
     @ApiImplicitParam(name = "userVO", value = "登录的视图对象", required = true, dataType = "UserVO", dataTypeClass = UserVO.class)
     @PostMapping(path = "/refreshToken")

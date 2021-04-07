@@ -41,7 +41,7 @@ public class Swagger3Config{
                                                    //控制哪些接口暴露给swagger ui面板
                                                    .select()
                                                    //为当前包下controller生成API文档
-                                                   .apis(RequestHandlerSelectors.basePackage("com.lx.yeb.api"))
+                                                   .apis(RequestHandlerSelectors.basePackage("com.lx.yeb.controller"))
                                                    //指定路径处理 PathSelectors.any()代表不过滤任何路径
                                                    .paths(PathSelectors.any())
                                                    .build()
@@ -55,7 +55,7 @@ public class Swagger3Config{
         return new ApiInfoBuilder().title("云E办")
                                    .description("云E办前端测试接口文档")
                                    .contact(new Contact("lipan", null, "lipan16@lzu.edu.cn"))
-                                   .version("1.0")
+                                   .version("1.0.0")
                                    .build();
     }
 
@@ -86,7 +86,7 @@ public class Swagger3Config{
                                                    //控制哪些接口暴露给swagger ui面板
                                                    .select()
                                                    //为当前包下controller生成API文档
-                                                   .apis(RequestHandlerSelectors.basePackage("com.lx.yeb.api"))
+                                                   .apis(RequestHandlerSelectors.basePackage("com.lx.yeb.controller"))
                                                    //指定路径处理 PathSelectors.any()代表不过滤任何路径
                                                    .paths(PathSelectors.any())
                                                    .build();

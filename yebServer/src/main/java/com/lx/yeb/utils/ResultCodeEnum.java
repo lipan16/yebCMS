@@ -9,6 +9,7 @@ package com.lx.yeb.utils;
  */
 public enum ResultCodeEnum{
     SUCCESS(200, "success"),
+    SUCCESS_LOGOUT(200, "注销成功"),
     USER_EXIST(1001, "用户已存在"),
     ADMIN_NOT_EXISTS(1002, "用户名不存在"),
     PASSWORD_ERROR(1003, "密码错误"),
@@ -21,6 +22,7 @@ public enum ResultCodeEnum{
     VERIFICATION_BE_REQUIRED(1010, "验证码不能为空"),
     VERIFICATION_EXPIRED(1011, "验证码已过期，请刷新验证码"),
     VERIFICATION_FAILED(1012, "验证码校验失败，请重新输入"),
+    NO_PERMISSION(1013, "没有权限"),
     FAILURE(9999, "fail");
 
     //结果状态码

@@ -9,6 +9,10 @@ import com.lx.yeb.service.LoginService;
 import com.lx.yeb.utils.JwtUtil;
 import com.lx.yeb.utils.ResultCodeEnum;
 import com.lx.yeb.utils.ResultUtil;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -28,6 +32,9 @@ public class LoginServiceImpl implements LoginService{
     private UserDao       userDao;
     @Resource
     private NavigationDao navigationDao;
+    // @Resource
+    // private PasswordEncoder passwordEncoder;
+
 
     /**
      * fetch 验证登录
@@ -47,6 +54,10 @@ public class LoginServiceImpl implements LoginService{
         if(user == null){
             return ResultUtil.result(ResultCodeEnum.PASSWORD_ERROR);
         }
+
+        // UsernamePasswordAuthenticationToken authenticationToken =
+        //         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        // SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         UserInfoDTO result = new UserInfoDTO();
         String      token  = JwtUtil.createToken(user.getUserid(), user.getUsername());
         result.setUserid(user.getUserid());

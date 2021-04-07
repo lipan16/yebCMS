@@ -18,9 +18,9 @@ import java.util.Map;
 @Slf4j
 public class JwtUtil{
     // 密钥
-    private static String SECRET     = "suokou@hunan";
+    private static final String SECRET     = "suokou@hunan";
     // 过期时间 30min
-    private static long   EXPIRATION = 1 * 1000 * 60;
+    private static final long   EXPIRATION = 1 * 1000 * 60;
 
     /**
      * fetch 创建token
@@ -66,8 +66,9 @@ public class JwtUtil{
                               .parseClaimsJws(token)
                               .getBody();
 
-            Integer userid   = Integer.parseInt(body.get("userid").toString());
-            String  username = body.get("username").toString();
+            Integer userid     = Integer.parseInt(body.get("userid").toString());
+            String  username   = body.get("username").toString();
+            Date    expiration = body.getExpiration();
             return ResultCodeEnum.SUCCESS;
         }catch(ExpiredJwtException e){ // token已过期
             log.error("token已过期", e);
