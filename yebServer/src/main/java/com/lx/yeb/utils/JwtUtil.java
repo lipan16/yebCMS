@@ -1,9 +1,6 @@
 package com.lx.yeb.utils;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
@@ -73,8 +70,20 @@ public class JwtUtil{
             String  username = body.get("username").toString();
             return ResultCodeEnum.SUCCESS;
         }catch(ExpiredJwtException e){ // token已过期
-            log.error("token已过期");
+            log.error("token已过期", e);
             return ResultCodeEnum.TOKEN_HAS_EXPIRED;
+        }catch(UnsupportedJwtException e){
+            log.error("token解析失败4", e);
+            return ResultCodeEnum.TOKEN_ERROR;
+        }catch(MalformedJwtException e){
+            log.error("token解析失败1", e);
+            return ResultCodeEnum.TOKEN_ERROR;
+        }catch(SignatureException e){
+            log.error("token解析失败2", e);
+            return ResultCodeEnum.TOKEN_ERROR;
+        }catch(IllegalArgumentException e){
+            log.error("token解析失败3", e);
+            return ResultCodeEnum.TOKEN_ERROR;
         }catch(Exception e){
             log.error("token解析失败", e);
             return ResultCodeEnum.TOKEN_ERROR;

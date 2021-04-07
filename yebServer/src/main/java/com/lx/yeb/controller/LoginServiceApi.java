@@ -1,4 +1,4 @@
-package com.lx.yeb.api;
+package com.lx.yeb.controller;
 
 import com.lx.yeb.bean.User;
 import com.lx.yeb.service.LoginService;
