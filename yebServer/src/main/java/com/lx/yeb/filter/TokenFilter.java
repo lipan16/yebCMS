@@ -6,7 +6,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -19,7 +18,7 @@ import java.io.IOException;
 
 /**
  * @ClassName TokenFilter
- * @Description JWT授权过滤器
+ * @Description JWT授权过滤器 负责在每次请求中，解析请求头中的 JWT，从中取得用户信息，生成验证对象传递给下一个过滤器
  * @Author lipan
  * @Date 2021/4/7 17:06
  * @Version 1.0

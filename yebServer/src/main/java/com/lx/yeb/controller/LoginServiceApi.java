@@ -1,6 +1,6 @@
 package com.lx.yeb.controller;
 
-import com.lx.yeb.bean.User;
+import com.lx.yeb.bean.YebUser;
 import com.lx.yeb.service.LoginService;
 import com.lx.yeb.utils.ResultCodeEnum;
 import com.lx.yeb.utils.ResultUtil;
@@ -30,6 +30,7 @@ public class LoginServiceApi{
 
     @ApiOperation("获取验证码图片")
     @GetMapping(path = "/verifyImg")
+    // @PreAuthorize("hasAuthority('sys:add')")
     public void getVerifyImg(HttpServletRequest request, HttpServletResponse response){
         try{
             response.setContentType("image/jpeg");//设置相应类型,告诉浏览器输出的内容为图片
@@ -61,12 +62,12 @@ public class LoginServiceApi{
         //     return ResultUtil.error(ResultCodeEnum.VERIFICATION_FAILED);
         // }
 
-        User user = new User();
-        BeanUtils.copyProperties(userVO, user, User.class);
-        if(!StringUtils.hasText(user.getUsername()) || !StringUtils.hasText(user.getPassword())){
+        YebUser yebUser = new YebUser();
+        BeanUtils.copyProperties(userVO, yebUser, YebUser.class);
+        if(!StringUtils.hasText(yebUser.getUsername()) || !StringUtils.hasText(yebUser.getPassword())){
             return ResultUtil.error(ResultCodeEnum.ADMIN_NOT_BE_NULL);
         }
-        return loginService.verifyLogin(user);
+        return loginService.verifyLogin(yebUser);
     }
 
 
@@ -83,20 +84,20 @@ public class LoginServiceApi{
     @PostMapping(path = "/refreshToken")
     public String refreshToken(@RequestBody UserVO userVO){
         log.info("[前端接口调用]: /api/refreshToken");
-        User user = new User();
-        BeanUtils.copyProperties(userVO, user, User.class);
-        if(!StringUtils.hasText(user.getUserid().toString()) || !StringUtils.hasText(user.getUsername())){
+        YebUser yebUser = new YebUser();
+        BeanUtils.copyProperties(userVO, yebUser, YebUser.class);
+        if(!StringUtils.hasText(yebUser.getUserid().toString()) || !StringUtils.hasText(yebUser.getUsername())){
             return ResultUtil.result(ResultCodeEnum.TOKEN_REFRESH_FAILED);
         }
-        return loginService.refreshToken(user);
+        return loginService.refreshToken(yebUser);
     }
 
     @ApiOperation(value = "获取当前用户的菜单栏")
     @PostMapping(path = "/menu")
     public String menu(@RequestBody UserVO userVO){
         log.info("[前端接口调用]: /api/menu");
-        User user = new User();
-        BeanUtils.copyProperties(userVO, user, User.class);
-        return loginService.menu(user);
+        YebUser yebUser = new YebUser();
+        BeanUtils.copyProperties(userVO, yebUser, YebUser.class);
+        return loginService.menu(yebUser);
     }
 }

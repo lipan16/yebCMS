@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @ClassName RestfulAccessDeniedHandler
- * @Description 当访问接口没有权限时，自定义的返回结果
+ * @Description 当访问接口没有权限时，自定义的返回结果 403
  * @Author lipan
  * @Date 2021/4/7 19:24
  * @Version 1.0
@@ -24,6 +24,7 @@ public class RestfulAccessDeniedHandler implements AccessDeniedHandler{
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse response, AccessDeniedException e) throws IOException, ServletException{
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.getWriter().println(ResultUtil.error(ResultCodeEnum.NO_PERMISSION));
         response.getWriter().flush();
     }

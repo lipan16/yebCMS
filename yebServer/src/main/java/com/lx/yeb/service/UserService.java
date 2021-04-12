@@ -1,12 +1,9 @@
 package com.lx.yeb.service;
 
-import com.lx.yeb.bean.User;
+import com.lx.yeb.bean.YebUser;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-import java.util.List;
-
-public interface UserService{
-    User getUserByName(String username);
-    // int addUser(User user);
-
-    // List<User> selectUser();
+public interface UserService extends UserDetailsService{
+    @Override
+    YebUser loadUserByUsername(String s);
 }

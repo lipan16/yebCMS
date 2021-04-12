@@ -1,6 +1,6 @@
 package com.lx.yeb.service;
 
-import com.lx.yeb.bean.User;
+import com.lx.yeb.bean.YebUser;
 
 /**
  * @ClassName LoginService
@@ -14,28 +14,28 @@ public interface LoginService{
     /**
      * fetch 验证登录
      *
-     * @param user
+     * @param yebUser
      * @return java.lang.String
      * @author lipan
      * @date 2021/3/17 13:31
      */
-    String verifyLogin(User user);
+    String verifyLogin(YebUser yebUser);
 
     /**
      * fetch 刷新token
      * @author lipan
      * @date 2021/3/24 13:52
-     * @param user
+     * @param yebUser
      * @return java.lang.String
      */
-    String refreshToken(User user);
+    String refreshToken(YebUser yebUser);
 
     /**
      * fetch 返回当前用户的导航栏
      * @author lipan
      * @date 2021/3/29 16:23
-     * @param user
+     * @param yebUser
      * @return java.lang.String
      */
-    String menu(User user);
+    String menu(YebUser yebUser);
 }

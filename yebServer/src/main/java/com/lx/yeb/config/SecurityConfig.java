@@ -1,13 +1,13 @@
 package com.lx.yeb.config;
 
-import com.lx.yeb.bean.User;
+import com.lx.yeb.bean.YebUser;
 import com.lx.yeb.filter.TokenFilter;
 import com.lx.yeb.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,13 +23,15 @@ import javax.annotation.Resource;
  * @Author lipan
  * @Date 2021/4/7 15:15
  * @Version 1.0
+ * WebSecurityConfigurerAdapter web安全配置的适配器
  */
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Resource
     private UserService userService;
     @Resource
-    RestfulAccessDeniedHandler restfulAccessDeniedHandler;
+    RestfulAccessDeniedHandler   restfulAccessDeniedHandler;
     @Resource
     RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
@@ -42,11 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Bean
     public UserDetailsService userDetailsService(){
         return username -> {
-            User user = userService.getUserByName(username);
-            if(null != user){
-                return user;
-            }
-            return null;
+            return userService.loadUserByUsername(username);
         };
     }
 
@@ -61,27 +59,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Override
     protected void configure(HttpSecurity http) throws Exception{
         //使用jwt不需要csrf
-        http.csrf()
-            .disable()
+        http.csrf().disable()
             //基于token不需要session
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            //验证所有请求
-            .authorizeRequests()
-            .antMatchers(HttpMethod.GET, // 允许对于网站静态资源的无授权访问
-                    "/swagger-ui/**","/", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js", "/swagger" +
-                            "-resources/**", "/v2/api-docs/**")
-            .permitAll()
-            //允许登录访问
-            .antMatchers("/api/login", "/api/logout")
-            .permitAll()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        //验证所有请求
+        http.authorizeRequests()
+            .antMatchers("/swagger-ui/**").permitAll() // 允许对于网站静态资源的无授权访问
+            .antMatchers("/api/login", "/api/logout").permitAll() //允许登录访问
             //除了上面的所有请求都要验证
-            .anyRequest()
-            .authenticated()
-            .and()
-            .headers()
-            .cacheControl();
+            .anyRequest().authenticated();
+
+        http.headers().cacheControl();
         // 添加jwt登录授权过滤器
         http.addFilterBefore(tokenFilter(), UsernamePasswordAuthenticationFilter.class);
         //添加自定义未授权，未登录结果返回

@@ -5,50 +5,50 @@
 
 <mapper namespace="com.lx.yeb.dao.UserDao">
     <select id="existUser" resultType="int">
-        select ifnull((select 1 from user where username = #{username}), 0)
+        select ifnull((select 1 from yebUser where username = #{username}), 0)
     </select>
 
-    <select id="verifyLogin" resultType="com.lx.yeb.bean.User">
+    <select id="verifyLogin" resultType="com.lx.yeb.bean.YebUser">
         select userid, username, password, icon, authority
-        from user
+        from yebUser
         where username = #{username}
           and password = #{password}
     </select>
 
-    <select id="selectUserById" parameterType="java.lang.Integer" resultType="com.lx.yeb.bean.User">
+    <select id="selectUserById" parameterType="java.lang.Integer" resultType="com.lx.yeb.bean.YebUser">
         select id, username, birthday, sex, address
-        from user
+        from yebUser
         where id = #{id}
     </select>
 
-    <select id="selectUserBy2Param" resultType="com.lx.yeb.bean.User">
+    <select id="selectUserBy2Param" resultType="com.lx.yeb.bean.YebUser">
         select id, username, birthday, sex, address
-        from user
+        from yebUser
         where username like #{myName}
            or address = "%"#{myAddress}"%"
     </select>
 
 
-    <select id="selectUserByObject" resultType="com.lx.yeb.bean.User">
+    <select id="selectUserByObject" resultType="com.lx.yeb.bean.YebUser">
         select id, username, birthday, sex, address
-        from user
+        from yebUser
         where username like "%"#{username}"%" or address = "%"#{address}"%"
     </select>
 
     <select id="countUser" resultType="int">
         select count(id)
-        from user
+        from yebUser
     </select>
 
     <select id="selectUserMapById" resultType="java.util.HashMap">
-        select id, username, sex from user where id = #{id}
+        select id, username, sex from yebUser where id = #{id}
         <if test="1==1">
             and id = #{id}
         </if>
     </select>
 
     <insert id="insertUser">
-        insert into user(username, birthday, sex, address)
+        insert into yebUser(username, birthday, sex, address)
         values (#{username}, #{birthday}, #{sex}, #{address})
     </insert>
 </mapper>

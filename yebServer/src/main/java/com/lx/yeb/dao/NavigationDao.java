@@ -1,7 +1,6 @@
 package com.lx.yeb.dao;
 
 import com.lx.yeb.bean.Navigation;
-import com.lx.yeb.bean.User;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
