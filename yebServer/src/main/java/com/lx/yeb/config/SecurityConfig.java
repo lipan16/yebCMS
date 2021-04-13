@@ -1,8 +1,7 @@
 package com.lx.yeb.config;
 
-import com.lx.yeb.bean.YebUser;
 import com.lx.yeb.filter.TokenFilter;
-import com.lx.yeb.service.UserService;
+import com.lx.yeb.service.impl.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -10,7 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -29,31 +27,17 @@ import javax.annotation.Resource;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Resource
-    private UserService userService;
+    private UserDetailsServiceImpl userDetailsService;
     @Resource
     RestfulAccessDeniedHandler   restfulAccessDeniedHandler;
     @Resource
     RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
-    @Bean
-    PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-
-    @Override
-    @Bean
-    public UserDetailsService userDetailsService(){
-        return username -> {
-            return userService.loadUserByUsername(username);
-        };
-    }
-
     //告诉security走重写的UserDetailsService并且使用重写的passwordEncoder做密码匹配
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception{
-        auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
-
 
     //security的完整配置
     @Override
@@ -65,8 +49,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
         //验证所有请求
         http.authorizeRequests()
-            .antMatchers("/swagger-ui/**").permitAll() // 允许对于网站静态资源的无授权访问
-            .antMatchers("/api/login", "/api/logout").permitAll() //允许登录访问
+            // 允许对于网站静态资源的无授权访问
+            .antMatchers("/swagger-ui/**", "/api/menu").permitAll()
+            //允许登录访问
+            .antMatchers("/api/login", "/api/logout").permitAll()
             //除了上面的所有请求都要验证
             .anyRequest().authenticated();
 
@@ -77,6 +63,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         http.exceptionHandling()
             .accessDeniedHandler(restfulAccessDeniedHandler)
             .authenticationEntryPoint(restAuthenticationEntryPoint);
+
+        // 记住我
+        // http.rememberMe()
+        //设置数据源
+        // .tokenRepository(persistentRememberMeToken())
+        //超时时间
+        // .tokenValiditySeconds(60)
+        // 自定义登录逻辑
+        // .userDetailsService(userDetailsService());
+    }
+
+    //告诉security加密方式
+    @Bean
+    PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 
     // jwt登录授权过滤器
@@ -84,4 +85,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     public TokenFilter tokenFilter(){
         return new TokenFilter();
     }
+
+    // @Bean
+    // public JdbcTokenRepositoryImpl persistentRememberMeToken(){
+    //     JdbcTokenRepositoryImpl jdbcTokenRepositoryImpl = new JdbcTokenRepositoryImpl();
+    //     //设置数据源
+    //     jdbcTokenRepositoryImpl.setDataSource(dataSource);
+    //     //自动建表 第一次启动时开启，第二次关闭
+    //     // jdbcTokenRepositoryImpl.setCreateTableOnStartup(true);
+    //     return jdbcTokenRepositoryImpl;
+    // }
 }

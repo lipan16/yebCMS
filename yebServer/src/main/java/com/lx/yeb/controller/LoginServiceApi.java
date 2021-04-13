@@ -100,4 +100,12 @@ public class LoginServiceApi{
         BeanUtils.copyProperties(userVO, yebUser, YebUser.class);
         return loginService.menu(yebUser);
     }
+
+    @ApiOperation(value = "获取当前用户的菜单栏")
+    @GetMapping(path = "/menu")
+    public String getMenu(){
+        log.info("[前端接口调用]: /api/menu");
+        YebUser yebUser = new YebUser();
+        return loginService.menu(yebUser);
+    }
 }
