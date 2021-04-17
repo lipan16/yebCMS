@@ -1,7 +1,7 @@
 package com.lx.yeb.config;
 
 import com.lx.yeb.filter.TokenFilter;
-import com.lx.yeb.service.impl.UserDetailsServiceImpl;
+import com.lx.yeb.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -22,6 +22,7 @@ import javax.annotation.Resource;
  * @Date 2021/4/7 15:15
  * @Version 1.0
  * WebSecurityConfigurerAdapter web安全配置的适配器
+ * EnableWebSecurity 会帮助创建一个springSecurityFilterChain过滤器（security框架入门）
  */
 @Configuration
 @EnableWebSecurity
@@ -33,13 +34,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Resource
     RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
-    //告诉security走重写的UserDetailsService并且使用重写的passwordEncoder做密码匹配
+    //security的认证配置 告诉security走重写的UserDetailsService并且使用重写的passwordEncoder做密码匹配
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception{
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
-    //security的完整配置
+    //security的授权配置
     @Override
     protected void configure(HttpSecurity http) throws Exception{
         //使用jwt不需要csrf

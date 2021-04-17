@@ -4,7 +4,9 @@ import com.lx.yeb.bean.YebUser;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface UserDao{
+public interface YebUserDao{
+    YebUser findByUsername(String username);
+
     // username是否存在表中
     Integer existUser(YebUser yebUser);
 

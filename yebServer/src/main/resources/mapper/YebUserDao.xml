@@ -3,14 +3,20 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.lx.yeb.dao.UserDao">
+<mapper namespace="com.lx.yeb.dao.YebUserDao">
+    <select id="findByUsername" resultType="com.lx.yeb.bean.YebUser">
+        select userid, username, password, icon, role, enabled
+        from user
+        where username = #{username}
+    </select>
+
     <select id="existUser" resultType="int">
-        select ifnull((select 1 from yebUser where username = #{username}), 0)
+        select ifnull((select 1 from user where username = #{username}), 0)
     </select>
 
     <select id="verifyLogin" resultType="com.lx.yeb.bean.YebUser">
-        select userid, username, password, icon, authority
-        from yebUser
+        select userid, username, password, icon, role, enabled
+        from user
         where username = #{username}
           and password = #{password}
     </select>

@@ -3,7 +3,7 @@ package com.lx.yeb.service.impl;
 import com.lx.yeb.bean.Navigation;
 import com.lx.yeb.bean.YebUser;
 import com.lx.yeb.dao.NavigationDao;
-import com.lx.yeb.dao.UserDao;
+import com.lx.yeb.dao.YebUserDao;
 import com.lx.yeb.dto.UserInfoDTO;
 import com.lx.yeb.service.LoginService;
 import com.lx.yeb.utils.JwtUtil;
@@ -25,7 +25,7 @@ import java.util.List;
 public class LoginServiceImpl implements LoginService{
 
     @Resource
-    private UserDao       userDao;
+    private YebUserDao    userDao;
     @Resource
     private NavigationDao navigationDao;
     // @Resource
