@@ -12,6 +12,16 @@ import com.lx.yeb.bean.YebUser;
 public interface LoginService{
 
     /**
+     * fetch 通过用户名来查询用户
+     *
+     * @param username
+     * @return com.lx.yeb.bean.YebUser
+     * @author lipan
+     * @date 2021/4/19 19:26
+     */
+    YebUser findUserByUsername(String username);
+
+    /**
      * fetch 验证登录
      *
      * @param yebUser
@@ -23,19 +33,21 @@ public interface LoginService{
 
     /**
      * fetch 刷新token
-     * @author lipan
-     * @date 2021/3/24 13:52
+     *
      * @param yebUser
      * @return java.lang.String
+     * @author lipan
+     * @date 2021/3/24 13:52
      */
     String refreshToken(YebUser yebUser);
 
     /**
      * fetch 返回当前用户的导航栏
-     * @author lipan
-     * @date 2021/3/29 16:23
+     *
      * @param yebUser
      * @return java.lang.String
+     * @author lipan
+     * @date 2021/3/29 16:23
      */
     String menu(YebUser yebUser);
 }

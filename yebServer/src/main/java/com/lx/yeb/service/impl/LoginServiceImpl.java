@@ -25,12 +25,16 @@ import java.util.List;
 public class LoginServiceImpl implements LoginService{
 
     @Resource
-    private YebUserDao    userDao;
+    private YebUserDao    yebUserDao;
     @Resource
     private NavigationDao navigationDao;
     // @Resource
     // private PasswordEncoder passwordEncoder;
 
+    @Override
+    public YebUser findUserByUsername(String username){
+        return yebUserDao.findUserByUsername(username);
+    }
 
     /**
      * fetch 验证登录
@@ -42,11 +46,11 @@ public class LoginServiceImpl implements LoginService{
      */
     @Override
     public String verifyLogin(YebUser u){
-        int exist = userDao.existUser(u);
+        int exist = yebUserDao.existUser(u);
         if(exist == 0){
             return ResultUtil.result(ResultCodeEnum.ADMIN_NOT_EXISTS);
         }
-        YebUser yebUser = userDao.verifyLogin(u);
+        YebUser yebUser = yebUserDao.verifyLogin(u);
         if(yebUser == null){
             return ResultUtil.result(ResultCodeEnum.PASSWORD_ERROR);
         }
@@ -88,10 +92,11 @@ public class LoginServiceImpl implements LoginService{
 
     /**
      * fetch 根据父菜单id选择出所有的子菜单
-     * @author lipan
-     * @date 2021/3/30 18:47
+     *
      * @param parentId
      * @return java.util.List<com.lx.yeb.bean.Navigation>
+     * @author lipan
+     * @date 2021/3/30 18:47
      */
     private List<Navigation> recursionMenu(Integer parentId){
         List<Navigation> navigationList = navigationDao.selectByParentId(parentId);

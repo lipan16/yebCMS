@@ -1,7 +1,6 @@
 package com.lx.yeb.config;
 
 import com.lx.yeb.interceptor.TokenInterceptor;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
@@ -13,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
  * @Date 2021/3/17 17:27
  * @Version 1.0
  */
-@Configuration
+// @Configuration
 public class InterceptorConfig extends WebMvcConfigurationSupport{
 
     @Override

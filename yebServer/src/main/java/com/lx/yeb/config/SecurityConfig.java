@@ -2,6 +2,7 @@ package com.lx.yeb.config;
 
 import com.lx.yeb.filter.TokenFilter;
 import com.lx.yeb.service.UserDetailsServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -22,10 +23,11 @@ import javax.annotation.Resource;
  * @Date 2021/4/7 15:15
  * @Version 1.0
  * WebSecurityConfigurerAdapter web安全配置的适配器
- * EnableWebSecurity 会帮助创建一个springSecurityFilterChain过滤器（security框架入门）
+ * EnableWebSecurity 会帮助创建一个springSecurityFilterChain过滤器（security框架入口）
  */
 @Configuration
 @EnableWebSecurity
+@Slf4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Resource
     private UserDetailsServiceImpl userDetailsService;
@@ -37,12 +39,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     //security的认证配置 告诉security走重写的UserDetailsService并且使用重写的passwordEncoder做密码匹配
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+        log.info("认证配置");
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
     //security的授权配置
     @Override
     protected void configure(HttpSecurity http) throws Exception{
+        log.info("授权配置");
         //使用jwt不需要csrf
         http.csrf().disable()
             //基于token不需要session
@@ -51,19 +55,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         //验证所有请求
         http.authorizeRequests()
             // 允许对于网站静态资源的无授权访问
-            .antMatchers("/swagger-ui/**", "/api/menu").permitAll()
+            .antMatchers("/swagger-ui/**", "/api/menu", "/api/hello").permitAll()
             //允许登录访问
             .antMatchers("/api/login", "/api/logout").permitAll()
             //除了上面的所有请求都要验证
             .anyRequest().authenticated();
 
+        http.formLogin();
+
         http.headers().cacheControl();
         // 添加jwt登录授权过滤器
         http.addFilterBefore(tokenFilter(), UsernamePasswordAuthenticationFilter.class);
         //添加自定义未授权，未登录结果返回
-        http.exceptionHandling()
-            .accessDeniedHandler(restfulAccessDeniedHandler)
-            .authenticationEntryPoint(restAuthenticationEntryPoint);
+        // http.exceptionHandling()
+        //     .accessDeniedHandler(restfulAccessDeniedHandler)
+        //     .authenticationEntryPoint(restAuthenticationEntryPoint);
 
         // 记住我
         // http.rememberMe()

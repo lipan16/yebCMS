@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface YebUserDao{
-    YebUser findByUsername(String username);
+    YebUser findUserByUsername(String username);
 
     // username是否存在表中
     Integer existUser(YebUser yebUser);

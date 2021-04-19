@@ -2,10 +2,12 @@ package com.lx.yeb.bean;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 /**
  * @ClassName User
@@ -24,9 +26,24 @@ public class YebUser implements UserDetails{
     private              String  role;
     private              int     enabled;
 
+    /**
+     * fetch
+     *
+     * @param
+     * @return java.util.Collection<? extends GrantedAuthority>
+     * <? extends GrantedAuthority> 泛型继承  GrantedAuthority的后代都可以
+     * @author lipan
+     * @date 2021/4/18 15:06
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities(){
-        return Collections.emptyList();
+        String[]                     roles = role.split(",");
+        List<SimpleGrantedAuthority> list  = new ArrayList<>();
+        for(String each : roles){
+            SimpleGrantedAuthority sga = new SimpleGrantedAuthority("ROLE_" + each.trim());
+            list.add(sga);
+        }
+        return list;
     }
 
     //账号是否未过期 true: 未过期

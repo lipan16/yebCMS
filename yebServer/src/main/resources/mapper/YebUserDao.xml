@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.lx.yeb.dao.YebUserDao">
-    <select id="findByUsername" resultType="com.lx.yeb.bean.YebUser">
+    <select id="findUserByUsername" resultType="com.lx.yeb.bean.YebUser">
         select userid, username, password, icon, role, enabled
         from user
         where username = #{username}

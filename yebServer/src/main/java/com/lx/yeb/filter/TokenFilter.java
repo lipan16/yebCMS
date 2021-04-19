@@ -31,7 +31,7 @@ public class TokenFilter extends OncePerRequestFilter{
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException{
-        log.info("token过滤器：");
+        log.info("security token过滤器：");
         String authHeader = httpServletRequest.getHeader("Authorization");
         // 存在token
         if(StringUtils.hasText(authHeader)){
