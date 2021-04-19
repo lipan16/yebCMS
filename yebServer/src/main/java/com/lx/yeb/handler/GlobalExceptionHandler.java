@@ -3,17 +3,11 @@ package com.lx.yeb.handler;
 import com.lx.yeb.utils.ResultCodeEnum;
 import com.lx.yeb.utils.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.web.server.ConfigurableWebServerFactory;
-import org.springframework.boot.web.server.ErrorPage;
-import org.springframework.boot.web.server.WebServerFactoryCustomizer;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 @ControllerAdvice(annotations = {Controller.class, RestController.class}) // 用来返回统一的错误json，或者错误页面
 public class GlobalExceptionHandler{
 
-    //全局的异常处理方法
+    // 全局的异常处理方法
     @ExceptionHandler(value = Exception.class)
     public @ResponseBody
     String errorHandler(HttpServletRequest request, Exception e) throws Exception{

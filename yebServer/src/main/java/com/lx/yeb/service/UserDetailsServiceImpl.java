@@ -31,7 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         if(null == yebUser){
             throw new UsernameNotFoundException("用户名不存在");
         }
-        //查询用户成功，需匹配用户密码，由security内部实现，只需要把查询的用户名正确密码返回即可
+        // 查询用户成功，需匹配用户密码，由security内部实现，只需要把查询的用户名正确密码返回即可
         log.info("lipan", yebUser);
         return yebUser;
     }

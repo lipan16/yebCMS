@@ -14,9 +14,9 @@ import java.util.Map;
  * @Version 1.0
  */
 public class ResultUtil{
-    public static String FLAGS = "flags"; //返回码
-    public static String INFO  = "info"; //返回状态消息
-    public static String DATA = "data"; //返回数据
+    public static String FLAGS = "flags"; // 返回码
+    public static String INFO  = "info"; // 返回状态消息
+    public static String DATA = "data"; // 返回数据
 
     /**
      * fetch 返回响应码、提示信息

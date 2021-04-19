@@ -25,7 +25,7 @@ import java.io.PrintWriter;
 @Slf4j
 public class TokenInterceptor implements HandlerInterceptor{
 
-    //方法执行前
+    // 方法执行前
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception{
         log.info("token拦截器TokenInterceptor--->方法执行前");
@@ -44,7 +44,7 @@ public class TokenInterceptor implements HandlerInterceptor{
         if(!StringUtils.hasText(authorization)){
             log.info("用户未登录，请先登录");
             writeContent(response, ResultUtil.result(ResultCodeEnum.USER_NOT_LOGIN));
-            //直接返回前端
+            // 直接返回前端
             return false;
         }
 
@@ -52,20 +52,20 @@ public class TokenInterceptor implements HandlerInterceptor{
         // 解析token失败或者token已失效
         if(resultCodeEnum != ResultCodeEnum.SUCCESS){
             writeContent(response, ResultUtil.error(resultCodeEnum));
-            //直接返回前端
+            // 直接返回前端
             return false;
         }
         return true;
     }
 
-    //方法执行后
+    // 方法执行后
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception{
         log.info("token拦截器TokenInterceptor--->方法执行后");
 
     }
 
-    //页面渲染前
+    // 页面渲染前
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception{
         log.info("token拦截器TokenInterceptor--->页面渲染前");

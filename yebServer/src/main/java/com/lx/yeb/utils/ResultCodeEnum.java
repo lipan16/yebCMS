@@ -25,9 +25,9 @@ public enum ResultCodeEnum{
     NO_PERMISSION(1013, "没有权限"),
     FAILURE(9999, "fail");
 
-    //结果状态码
+    // 结果状态码
     private Integer flags;
-    //结果消息
+    // 结果消息
     private String  info;
 
     ResultCodeEnum(Integer flags, String info){

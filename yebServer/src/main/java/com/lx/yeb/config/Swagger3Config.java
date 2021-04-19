@@ -40,16 +40,16 @@ public class Swagger3Config{
                                                    .enable(swaggerEnable)
                                                    .groupName("前端接口管理")
                                                    .apiInfo(frontApiInfo())
-                                                   //控制哪些接口暴露给swagger ui面板
+                                                   // 控制哪些接口暴露给swagger ui面板
                                                    .select()
-                                                   //为当前包下controller生成API文档
+                                                   // 为当前包下controller生成API文档
                                                    .apis(RequestHandlerSelectors.basePackage("com.lx.yeb.controller"))
-                                                   //指定路径处理 PathSelectors.any()代表不过滤任何路径
+                                                   // 指定路径处理 PathSelectors.any()代表不过滤任何路径
                                                    .paths(PathSelectors.any())
                                                    .build()
-                                                   //授权信息设置，必要的header token等认证信息
+                                                   // 授权信息设置，必要的header token等认证信息
                                                    .securitySchemes(securitySchemes())
-                                                   //授权信息全局应用
+                                                   // 授权信息全局应用
                                                    .securityContexts(securityContexts());
     }
 
@@ -85,11 +85,11 @@ public class Swagger3Config{
         return new Docket(DocumentationType.OAS_30).enable(swaggerEnable)
                                                    .groupName("后台管理")
                                                    .apiInfo(backApiInfo())
-                                                   //控制哪些接口暴露给swagger ui面板
+                                                   // 控制哪些接口暴露给swagger ui面板
                                                    .select()
-                                                   //为当前包下controller生成API文档
+                                                   // 为当前包下controller生成API文档
                                                    .apis(RequestHandlerSelectors.basePackage("com.lx.yeb.controller"))
-                                                   //指定路径处理 PathSelectors.any()代表不过滤任何路径
+                                                   // 指定路径处理 PathSelectors.any()代表不过滤任何路径
                                                    .paths(PathSelectors.any())
                                                    .build();
     }

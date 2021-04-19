@@ -46,25 +46,25 @@ public class YebUser implements UserDetails{
         return list;
     }
 
-    //账号是否未过期 true: 未过期
+    // 账号是否未过期 true: 未过期
     @Override
     public boolean isAccountNonExpired(){
         return true;
     }
 
-    //账户是否未锁定
+    // 账户是否未锁定
     @Override
     public boolean isAccountNonLocked(){
         return true;
     }
 
-    //密码是否未过期
+    // 密码是否未过期
     @Override
     public boolean isCredentialsNonExpired(){
         return true;
     }
 
-    //账户是不是可用 true: 可用
+    // 账户是不是可用 true: 可用
     @Override
     public boolean isEnabled(){
         return this.enabled == 1;

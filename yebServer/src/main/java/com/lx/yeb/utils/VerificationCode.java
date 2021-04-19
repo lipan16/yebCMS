@@ -6,10 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.security.SecureRandom;
-import java.util.Date;
 
 /**
  * @ClassName VerificationCode
@@ -19,15 +16,15 @@ import java.util.Date;
  * @Version 1.0
  */
 public class VerificationCode{
-    private int          width     = 100; //生成验证码图片的宽度
-    private int          height    = 30; //生成验证码图片的高度
+    private int          width     = 100; // 生成验证码图片的宽度
+    private int          height    = 30; // 生成验证码图片的高度
     private String[]     fontNames = {"宋体", "楷体", "隶书", "微软雅黑"};
-    private Color        bgColor   = new Color(255, 255, 255); //定义验证码图片的背景颜色为白色
+    private Color        bgColor   = new Color(255, 255, 255); // 定义验证码图片的背景颜色为白色
     private SecureRandom random    = new SecureRandom();
     private String       codes     = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private String       text      = ""; //记录随机字符串
+    private String       text      = ""; // 记录随机字符串
 
-    //生成一个随机颜色
+    // 生成一个随机颜色
     private Color randomColor(){
         int red   = random.nextInt(256);
         int green = random.nextInt(256);
@@ -35,7 +32,7 @@ public class VerificationCode{
         return new Color(red, green, blue);
     }
 
-    //生成一个随机字体
+    // 生成一个随机字体
     private Font randomFont(){
         String name  = fontNames[random.nextInt(fontNames.length)];
         int    style = random.nextInt(4);
@@ -43,12 +40,12 @@ public class VerificationCode{
         return new Font(name, style, size);
     }
 
-    //获取一个随机字符
+    // 获取一个随机字符
     private char randomChar(){
         return codes.charAt(random.nextInt(codes.length()));
     }
 
-    //绘制干扰线
+    // 绘制干扰线
     private void drawLine(BufferedImage image){
         Graphics2D graphics2D = (Graphics2D) image.getGraphics();
         for(int i = 0; i < 5; i++){
@@ -62,7 +59,7 @@ public class VerificationCode{
         }
     }
 
-    //生成四位的验证码图片
+    // 生成四位的验证码图片
     public BufferedImage createBufferedImage(){
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D    graphics2D    = (Graphics2D) bufferedImage.getGraphics();
@@ -82,7 +79,7 @@ public class VerificationCode{
         return bufferedImage;
     }
 
-    //向response中写验证码图片
+    // 向response中写验证码图片
     public void getVerifyCode(HttpServletRequest request, HttpServletResponse response) throws Exception{
         HttpSession   session = request.getSession();
         BufferedImage image   = createBufferedImage();

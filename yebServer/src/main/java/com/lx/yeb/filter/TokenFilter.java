@@ -36,9 +36,9 @@ public class TokenFilter extends OncePerRequestFilter{
         // 存在token
         if(StringUtils.hasText(authHeader)){
             String username = JwtUtil.getTokenInfo(authHeader).toString();
-            //token存在用户名但是未登录
+            // token存在用户名但是未登录
             if(StringUtils.hasText(username) && null == SecurityContextHolder.getContext().getAuthentication()){
-                //登录
+                // 登录
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 // 验证token是否有效
                 // if()
