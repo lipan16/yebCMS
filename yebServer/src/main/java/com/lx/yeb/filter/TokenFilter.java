@@ -35,10 +35,12 @@ public class TokenFilter extends OncePerRequestFilter{
         String authHeader = httpServletRequest.getHeader("Authorization");
         // 存在token
         if(StringUtils.hasText(authHeader)){
+            log.info("security has token");
             String username = JwtUtil.getTokenInfo(authHeader).toString();
             // token存在用户名但是未登录
             if(StringUtils.hasText(username) && null == SecurityContextHolder.getContext().getAuthentication()){
                 // 登录
+                log.info("security has userinfo");
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 // 验证token是否有效
                 // if()
