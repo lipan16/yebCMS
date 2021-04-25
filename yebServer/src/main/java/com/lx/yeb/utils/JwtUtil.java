@@ -50,6 +50,28 @@ public class JwtUtil{
         return token;
     }
 
+    /**
+     * fetch 通过token获取用户名
+     * @author lipan
+     * @date 2021/4/25 21:34
+     * @param token
+     * @return java.lang.String
+     */
+
+    public static String getUsernameByToken(String token){
+        try{
+            Claims body = Jwts.parser()
+                              .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
+                              .parseClaimsJws(token)
+                              .getBody();
+            Integer userid   = Integer.parseInt(body.get("userid").toString());
+            String  username = body.get("username").toString();
+            return username;
+        }catch(Exception e){
+            log.error("token解析失败", e);
+            return "";
+        }
+    }
 
     /**
      * fetch 获取Token信息

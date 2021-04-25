@@ -43,6 +43,7 @@ public class YebUser implements UserDetails{
             SimpleGrantedAuthority sga = new SimpleGrantedAuthority("ROLE_" + each.trim());
             list.add(sga);
         }
+        System.out.println("查询用户的角色权限是" + list.toString());
         return list;
     }
 

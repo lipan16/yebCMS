@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -54,6 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         log.info("授权配置");
         // 使用jwt不需要csrf
         http.csrf().disable()
+            // 允许跨域
+            .cors().and()
             // 基于token不需要session
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
@@ -73,7 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
         http.headers().cacheControl();
         // 添加jwt登录授权过滤器
-        // http.addFilterBefore(tokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(tokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         // 添加自定义未授权，未登录结果返回
         http.exceptionHandling()
@@ -100,6 +104,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Bean
     TokenFilter tokenFilter(){
         return new TokenFilter();
+    }
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception{
+        return super.authenticationManagerBean();
     }
 
     // @Bean
