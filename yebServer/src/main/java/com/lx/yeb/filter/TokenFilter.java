@@ -32,23 +32,26 @@ public class TokenFilter extends OncePerRequestFilter{
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException{
         log.info("security token过滤器：");
-        String authHeader = httpServletRequest.getHeader("Authorization");
+        String token = httpServletRequest.getHeader("Authorization");
         // 存在token
-        if(StringUtils.hasText(authHeader)){
+        if(StringUtils.hasText(token)){
             log.info("security has token");
-            String username = JwtUtil.getUsernameByToken(authHeader);
+            String username = JwtUtil.getUsernameByToken(token);
             // token存在用户名但是未登录
             if(StringUtils.hasText(username) && null == SecurityContextHolder.getContext().getAuthentication()){
                 // 登录
                 log.info("security has userinfo");
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 // 验证token是否有效
-                // if()
-                UsernamePasswordAuthenticationToken uPAT =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                uPAT.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-                SecurityContextHolder.getContext().setAuthentication(uPAT);
+                if(null != userDetails && JwtUtil.validateToken(token, userDetails)){
+                    UsernamePasswordAuthenticationToken uPAT = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails
+                            .getAuthorities());
+                    uPAT.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+                    SecurityContextHolder.getContext().setAuthentication(uPAT);
+                }
             }
+        }else{
+            SecurityContextHolder.clearContext();
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }

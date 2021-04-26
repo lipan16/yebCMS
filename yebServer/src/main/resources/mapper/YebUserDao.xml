@@ -5,7 +5,7 @@
 
 <mapper namespace="com.lx.yeb.dao.YebUserDao">
     <select id="findUserByUsername" resultType="com.lx.yeb.bean.YebUser">
-        select userid, username, password, icon, role, enabled
+        select username, password, icon, role, enabled
         from user
         where username = #{username}
     </select>
@@ -15,7 +15,7 @@
     </select>
 
     <select id="verifyLogin" resultType="com.lx.yeb.bean.YebUser">
-        select userid, username, password, icon, role, enabled
+        select username, password, icon, role, enabled
         from user
         where username = #{username}
           and password = #{password}

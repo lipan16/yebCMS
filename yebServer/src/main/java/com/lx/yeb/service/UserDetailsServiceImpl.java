@@ -26,13 +26,13 @@ public class UserDetailsServiceImpl implements UserDetailsService{
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
-        log.info("执行自定义登录逻辑" + username);
+        log.info("账号认证中: {}", username);
         YebUser yebUser = loginService.findUserByUsername(username);
         if(null == yebUser){
             throw new UsernameNotFoundException("用户名不存在");
         }
         // 查询用户成功，需匹配用户密码，由security内部实现，只需要把查询的用户名正确密码返回即可
-        log.info("lipan", yebUser);
+        log.info("lipan {}", yebUser);
         return yebUser;
     }
 }

@@ -6,9 +6,14 @@ import com.lx.yeb.dao.NavigationDao;
 import com.lx.yeb.dao.YebUserDao;
 import com.lx.yeb.dto.UserInfoDTO;
 import com.lx.yeb.service.LoginService;
+import com.lx.yeb.service.UserDetailsServiceImpl;
 import com.lx.yeb.utils.JwtUtil;
 import com.lx.yeb.utils.ResultCodeEnum;
 import com.lx.yeb.utils.ResultUtil;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -28,8 +33,10 @@ public class LoginServiceImpl implements LoginService{
     private YebUserDao    yebUserDao;
     @Resource
     private NavigationDao navigationDao;
-    // @Resource
-    // private PasswordEncoder passwordEncoder;
+    @Resource
+    private UserDetailsServiceImpl userDetailsService;
+    @Resource
+    private PasswordEncoder        passwordEncoder;
 
     @Override
     public YebUser findUserByUsername(String username){
@@ -46,24 +53,28 @@ public class LoginServiceImpl implements LoginService{
      */
     @Override
     public String verifyLogin(YebUser u){
-        int exist = yebUserDao.existUser(u);
-        if(exist == 0){
-            return ResultUtil.result(ResultCodeEnum.ADMIN_NOT_EXISTS);
+        System.out.println(u);
+        // int exist = yebUserDao.existUser(u);
+        // if(exist == 0){
+        //     return ResultUtil.result(ResultCodeEnum.ADMIN_NOT_EXISTS);
+        // }
+        // YebUser yebUser = yebUserDao.verifyLogin(u);
+        // if(yebUser == null){
+        //     return ResultUtil.result(ResultCodeEnum.PASSWORD_ERROR);
+        // }
+        UserDetails yebUser = userDetailsService.loadUserByUsername(u.getUsername());
+        if(passwordEncoder.matches(u.getPassword(), yebUser.getPassword())){
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(yebUser, null, yebUser
+                    .getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            UserInfoDTO result = new UserInfoDTO();
+            String      token  = JwtUtil.createToken(yebUser.getUsername());
+            result.setUsername(yebUser.getUsername());
+            result.setToken(token);
+            return ResultUtil.result(ResultCodeEnum.SUCCESS, result);
+        }else{
+            return ResultUtil.error(ResultCodeEnum.PASSWORD_ERROR);
         }
-        YebUser yebUser = yebUserDao.verifyLogin(u);
-        if(yebUser == null){
-            return ResultUtil.result(ResultCodeEnum.PASSWORD_ERROR);
-        }
-
-        // UsernamePasswordAuthenticationToken authenticationToken =
-        //         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        // SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        UserInfoDTO result = new UserInfoDTO();
-        String      token  = JwtUtil.createToken(yebUser.getUserid(), yebUser.getUsername());
-        result.setUserid(yebUser.getUserid());
-        result.setUsername(yebUser.getUsername());
-        result.setToken(token);
-        return ResultUtil.result(ResultCodeEnum.SUCCESS, result);
     }
 
     /**
@@ -77,8 +88,7 @@ public class LoginServiceImpl implements LoginService{
     @Override
     public String refreshToken(YebUser yebUser){
         UserInfoDTO result = new UserInfoDTO();
-        String      token  = JwtUtil.createToken(yebUser.getUserid(), yebUser.getUsername());
-        result.setUserid(yebUser.getUserid());
+        String      token  = JwtUtil.createToken(yebUser.getUsername());
         result.setUsername(yebUser.getUsername());
         result.setToken(token);
         return ResultUtil.result(ResultCodeEnum.SUCCESS, result);

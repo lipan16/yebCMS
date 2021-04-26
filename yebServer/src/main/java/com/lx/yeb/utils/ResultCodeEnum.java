@@ -11,7 +11,7 @@ public enum ResultCodeEnum{
     SUCCESS(200, "success"),
     SUCCESS_LOGOUT(200, "注销成功"),
     USER_EXIST(1001, "用户已存在"),
-    ADMIN_NOT_EXISTS(1002, "用户名不存在"),
+    USERNAME_NOT_EXISTS(1002, "用户名不存在"),
     PASSWORD_ERROR(1003, "密码错误"),
     ADMIN_NOT_BE_NULL(1004, "用户名密码不能为空"),
     SERVER_ERROR(1005, "服务器错误"),

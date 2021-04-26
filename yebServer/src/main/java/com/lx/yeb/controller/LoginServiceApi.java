@@ -86,7 +86,7 @@ public class LoginServiceApi{
         log.info("[前端接口调用]: /api/refreshToken");
         YebUser yebUser = new YebUser();
         BeanUtils.copyProperties(userVO, yebUser, YebUser.class);
-        if(!StringUtils.hasText(yebUser.getUserid().toString()) || !StringUtils.hasText(yebUser.getUsername())){
+        if(!StringUtils.hasText(yebUser.getUsername())){
             return ResultUtil.result(ResultCodeEnum.TOKEN_REFRESH_FAILED);
         }
         return loginService.refreshToken(yebUser);

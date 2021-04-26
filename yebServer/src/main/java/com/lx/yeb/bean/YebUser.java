@@ -18,13 +18,12 @@ import java.util.List;
  */
 @Data
 public class YebUser implements UserDetails{
-    private static final long    serialVersionUID = -4879454135035126119L;
-    private              Integer userid;
-    private              String  username;
-    private              String  password;
-    private              String  icon;
-    private              String  role;
-    private              int     enabled;
+    private static final long   serialVersionUID = -4879454135035126119L;
+    private              String username;
+    private              String password;
+    private              String icon;
+    private              String role;
+    private              int    enabled;
 
     /**
      * fetch

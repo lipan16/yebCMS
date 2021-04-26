@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -67,7 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
             // .antMatchers("/favicon.ico", "/swagger-ui/**").permitAll()
             // 测试
             .antMatchers("/api/menu").permitAll()
-            .antMatchers("/api/hello").hasAuthority("admin")
+            .antMatchers("/api/hello").hasRole("admin")
             // 允许登录访问
             .antMatchers("/api/login", "/api/logout").permitAll()
             // 除了上面的所有请求都要验证
@@ -76,7 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         // http.formLogin();
 
         http.headers().cacheControl();
-        // 添加jwt登录授权过滤器
+        // 添加jwt登录认证过滤器
         http.addFilterBefore(tokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         // 添加自定义未授权，未登录结果返回
@@ -104,12 +103,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Bean
     TokenFilter tokenFilter(){
         return new TokenFilter();
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception{
-        return super.authenticationManagerBean();
     }
 
     // @Bean

@@ -1,7 +1,14 @@
 package com.lx.yeb.utils;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -25,14 +32,13 @@ public class JwtUtil{
     /**
      * fetch 创建token
      *
-     * @param userId, username
+     * @param username
      * @return java.lang.String
      * @author lipan
      * @date 2021/3/17 15:43
      */
-    public static String createToken(Integer userId, String username){
+    public static String createToken(String username){
         Map<String, Object> map = new HashMap<>(4);
-        map.put("userid", userId);
         map.put("username", username);
 
         long time       = System.currentTimeMillis();
@@ -64,7 +70,6 @@ public class JwtUtil{
                               .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
                               .parseClaimsJws(token)
                               .getBody();
-            Integer userid   = Integer.parseInt(body.get("userid").toString());
             String  username = body.get("username").toString();
             return username;
         }catch(Exception e){
@@ -73,6 +78,9 @@ public class JwtUtil{
         }
     }
 
+    public static boolean validateToken(String token, UserDetails userDetails){
+        return getUsernameByToken(token).equals(userDetails.getUsername());
+    }
     /**
      * fetch 获取Token信息
      *
@@ -88,7 +96,6 @@ public class JwtUtil{
                               .parseClaimsJws(token)
                               .getBody();
 
-            Integer userid     = Integer.parseInt(body.get("userid").toString());
             String  username   = body.get("username").toString();
             Date    expiration = body.getExpiration();
             return ResultCodeEnum.SUCCESS;
