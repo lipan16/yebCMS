@@ -1,5 +1,6 @@
 package com.lx.yeb.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lx.yeb.filter.TokenFilter;
 import com.lx.yeb.service.UserDetailsServiceImpl;
 import com.lx.yeb.utils.ResultCodeEnum;
@@ -25,6 +26,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * @ClassName SecurityConfig
@@ -55,11 +57,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         log.info("授权配置");
         // 使用jwt不需要csrf
         http.csrf().disable()
+            // 防止iframe 造成跨域
+            .headers().frameOptions().disable().and()
             // 允许跨域
             .cors().and()
             // 基于token不需要session
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+        http.formLogin().successHandler((request, response, authentication)->{
+            response.setContentType("application/json;charset=utf-8");
+            PrintWriter pw = response.getWriter();
+            pw.write(new ObjectMapper().writeValueAsString(authentication.getPrincipal()));
+            pw.flush();
+            pw.close();
+        }).failureHandler((request, response, exception)->{
+            response.setContentType("application/json;charset=utf-8");
+            PrintWriter pw = response.getWriter();
+            pw.write(new ObjectMapper().writeValueAsString(exception.getMessage()));
+            pw.flush();
+            pw.close();
+        });
         // 验证所有请求
         http.authorizeRequests()
             // 允许访问网站静态资源

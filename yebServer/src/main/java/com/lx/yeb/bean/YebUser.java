@@ -1,6 +1,8 @@
 package com.lx.yeb.bean;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,18 +19,24 @@ import java.util.List;
  * @Version 1.0
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class YebUser implements UserDetails{
-    private static final long   serialVersionUID = -4879454135035126119L;
-    private              String username;
-    private              String password;
-    private              String icon;
-    private              String role;
-    private              int    enabled;
+    private static final long                         serialVersionUID = -4879454135035126119L;
+    private              String                       username;
+    private              String                       password;
+    private              String                       icon;
+    private              String                       role;
+    private              int                          enabled;
+    private              Collection<GrantedAuthority> authorities;
+
+    public YebUser(String username, String password, Collection<GrantedAuthority> authorities){
+        this.username = username;
+        this.password = password;
+        this.authorities = authorities;
+    }
 
     /**
-     * fetch
-     *
-     * @param
      * @return java.util.Collection<? extends GrantedAuthority>
      * <? extends GrantedAuthority> 泛型继承  GrantedAuthority的后代都可以
      * @author lipan
