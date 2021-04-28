@@ -44,6 +44,7 @@ public class TokenFilter extends OncePerRequestFilter{
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 // 验证token是否有效
                 if(null != userDetails && JwtUtil.validateToken(token, userDetails)){
+                    //将认证信息放到SpringSecurity上下文中，给后续的SpringSecurity鉴权使用，如果不放，SpringSecurity就不能鉴权
                     UsernamePasswordAuthenticationToken uPAT = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails
                             .getAuthorities());
                     uPAT.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));

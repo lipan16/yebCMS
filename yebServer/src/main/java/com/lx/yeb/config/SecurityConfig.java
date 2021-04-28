@@ -64,16 +64,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
             // 基于token不需要session
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.formLogin().successHandler((request, response, authentication)->{
+        http.formLogin().successHandler((request, response, authentication) -> {
             response.setContentType("application/json;charset=utf-8");
             PrintWriter pw = response.getWriter();
             pw.write(new ObjectMapper().writeValueAsString(authentication.getPrincipal()));
             pw.flush();
             pw.close();
-        }).failureHandler((request, response, exception)->{
+        }).failureHandler((request, response, exception) -> {
             response.setContentType("application/json;charset=utf-8");
             PrintWriter pw = response.getWriter();
             pw.write(new ObjectMapper().writeValueAsString(exception.getMessage()));
+            pw.flush();
+            pw.close();
+        }).and().logout().logoutUrl("/api/logout").logoutSuccessHandler((request, response, exception) -> {
+            response.setContentType("application/json;charset=utf-8");
+            PrintWriter pw = response.getWriter();
+            pw.write(new ObjectMapper().writeValueAsString("退出登录"));
             pw.flush();
             pw.close();
         });
@@ -82,8 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
             // 允许访问网站静态资源
             // .antMatchers("/favicon.ico", "/swagger-ui/**").permitAll()
             // 测试
-            .antMatchers("/api/menu").permitAll()
-            .antMatchers("/api/hello").hasRole("admin")
+            .antMatchers("/api/menu").permitAll().antMatchers("/api/hello").hasRole("admin")
             // 允许登录访问
             .antMatchers("/api/login", "/api/logout").permitAll()
             // 除了上面的所有请求都要验证
