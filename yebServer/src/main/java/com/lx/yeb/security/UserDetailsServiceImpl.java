@@ -1,16 +1,25 @@
-package com.lx.yeb.service;
+package com.lx.yeb.security;
 
 import com.lx.yeb.bean.YebUser;
+import com.lx.yeb.service.LoginService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * fetch 重写 spring security 的 UserDetailsService
+ * @author lipan
+ * @date 2021/5/9 21:36
+ * @param
+ * @return
+ */
 @Service
 @Slf4j
 public class UserDetailsServiceImpl implements UserDetailsService{
@@ -33,11 +42,18 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         if(null == yebUser){
             throw new UsernameNotFoundException("用户名不存在");
         }
-        if(!yebUser.isEnabled()){
-            throw new UsernameNotFoundException("账户未激活");
-        }
-        // 查询用户成功，需匹配用户密码，由security内部实现，只需要把查询的用户名正确密码返回即可
         log.info("lipan {}", yebUser);
-        return new YebUser(yebUser.getUsername(), yebUser.getPassword(), (Collection<GrantedAuthority>) yebUser.getAuthorities());
+
+        // 获取用户权限信息
+        List<SimpleGrantedAuthority> list  = new ArrayList<>();
+        String[]                     roles = yebUser.getRole().split(",");
+        for(String each : roles){
+            SimpleGrantedAuthority sga = new SimpleGrantedAuthority("ROLE_" + each.trim());
+            list.add(sga);
+        }
+        System.out.println("查询用户的角色权限是" + list.toString());
+
+        // 查询用户成功，需匹配用户密码，由security内部实现，只需要把查询的用户名正确密码返回即可
+        return new YebUserDetails(yebUser.getUsername(), yebUser.getPassword(), list);
     }
 }
