@@ -1,8 +1,8 @@
 package com.lx.yeb.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lx.yeb.filter.TokenFilter;
-import com.lx.yeb.service.UserDetailsServiceImpl;
+import com.lx.yeb.filter.JwtAuthenticationFilter;
+import com.lx.yeb.security.UserDetailsServiceImpl;
 import com.lx.yeb.utils.ResultCodeEnum;
 import com.lx.yeb.utils.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -97,8 +97,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         // http.formLogin();
 
         http.headers().cacheControl();
-        // 添加jwt登录认证过滤器
-        http.addFilterBefore(tokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        // 添加jwt验证请求过滤器
+        http.addFilterBefore(JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         // 添加自定义未授权，未登录结果返回
         http.exceptionHandling()
@@ -121,10 +121,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         return new BCryptPasswordEncoder();
     }
 
-    // jwt登录授权过滤器
+    // JWT验证请求过滤器
     @Bean
-    TokenFilter tokenFilter(){
-        return new TokenFilter();
+    JwtAuthenticationFilter JwtAuthenticationFilter() throws Exception{
+        return new JwtAuthenticationFilter(authenticationManager());
     }
 
     // @Bean

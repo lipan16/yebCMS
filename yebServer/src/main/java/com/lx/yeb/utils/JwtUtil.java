@@ -8,7 +8,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -27,7 +26,7 @@ public class JwtUtil{
     // 密钥
     private static final String SECRET     = "suokou@hunan";
     // 过期时间 30min
-    private static final long   EXPIRATION = 1 * 1000 * 60;
+    private static final long   EXPIRATION = 30 * 1000 * 60;
 
     /**
      * fetch 创建token
@@ -58,65 +57,25 @@ public class JwtUtil{
 
     /**
      * fetch 通过token获取用户名
-     * @author lipan
-     * @date 2021/4/25 21:34
+     *
      * @param token
      * @return java.lang.String
+     * @author lipan
+     * @date 2021/4/25 21:34
      */
-
     public static String getUsernameByToken(String token){
         try{
             Claims body = Jwts.parser()
                               .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
                               .parseClaimsJws(token)
                               .getBody();
-            String  username = body.get("username").toString();
-            return username;
+            return body.get("username").toString();
+        }catch(ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e){ // token已过期
+            // token已过期, token格式错误, token没有被正确构造, token签名失败, token非法参数异常
+            throw e;
         }catch(Exception e){
-            log.error("token解析失败", e);
-            return "";
-        }
-    }
-
-    public static boolean validateToken(String token, UserDetails userDetails){
-        return getUsernameByToken(token).equals(userDetails.getUsername());
-    }
-    /**
-     * fetch 获取Token信息
-     *
-     * @param token
-     * @return com.lx.yeb.vo.UserTokenVO
-     * @author lipan
-     * @date 2021/3/18 16:15
-     */
-    public static ResultCodeEnum getTokenInfo(String token){
-        try{
-            Claims body = Jwts.parser()
-                              .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
-                              .parseClaimsJws(token)
-                              .getBody();
-
-            String  username   = body.get("username").toString();
-            Date    expiration = body.getExpiration();
-            return ResultCodeEnum.SUCCESS;
-        }catch(ExpiredJwtException e){ // token已过期
-            log.error("token已过期", e);
-            return ResultCodeEnum.TOKEN_HAS_EXPIRED;
-        }catch(UnsupportedJwtException e){
-            log.error("token解析失败4", e);
-            return ResultCodeEnum.TOKEN_ERROR;
-        }catch(MalformedJwtException e){
-            log.error("token解析失败1", e);
-            return ResultCodeEnum.TOKEN_ERROR;
-        }catch(SignatureException e){
-            log.error("token解析失败2", e);
-            return ResultCodeEnum.TOKEN_ERROR;
-        }catch(IllegalArgumentException e){
-            log.error("token解析失败3", e);
-            return ResultCodeEnum.TOKEN_ERROR;
-        }catch(Exception e){
-            log.error("token解析失败", e);
-            return ResultCodeEnum.TOKEN_ERROR;
+            // log.error("Invalid Token", e);
+            throw e;
         }
     }
 }
