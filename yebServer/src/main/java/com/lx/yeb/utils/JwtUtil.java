@@ -74,7 +74,6 @@ public class JwtUtil{
             // token已过期, token格式错误, token没有被正确构造, token签名失败, token非法参数异常
             throw e;
         }catch(Exception e){
-            // log.error("Invalid Token", e);
             throw e;
         }
     }

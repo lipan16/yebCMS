@@ -9,13 +9,12 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
@@ -33,20 +32,23 @@ import java.io.IOException;
  * @Version 1.0
  */
 @Slf4j
-public class JwtAuthenticationFilter extends BasicAuthenticationFilter{
+public class JwtAuthenticationFilter extends OncePerRequestFilter{
     @Resource
     UserDetailsServiceImpl userDetailsService;
-
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager){
-        super(authenticationManager);
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException{
         log.info("spring security JWT验证请求过滤器");
+        httpServletResponse.setContentType("application/json;charset=utf-8");
 
-        httpServletResponse.setCharacterEncoding("utf-8");
-        httpServletResponse.setContentType("application/json");
+        // 获取请求 url 来判断是否是登录
+        String requestUri = httpServletRequest.getRequestURI();
+        // 请求类型
+        String method = httpServletRequest.getMethod();
+        if("/api/login".equals(requestUri) && "POST".equalsIgnoreCase(method)){
+            filterChain.doFilter(httpServletRequest, httpServletResponse);
+            return;
+        }
 
         String token = httpServletRequest.getHeader("Authorization");
         // 存在token
@@ -69,31 +71,38 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter{
                     }
                 }
             }catch(ExpiredJwtException e){
-                log.error("token已过期", e);
                 httpServletResponse.getWriter().println(ResultUtil.error(ResultCodeEnum.TOKEN_EXPIRED));
+                httpServletResponse.getWriter().flush();
+                log.error("token已过期", e);
             }catch(UnsupportedJwtException e){
                 httpServletResponse.getWriter().println(ResultUtil.error(ResultCodeEnum.TOKEN_UNSUPPORTED));
+                httpServletResponse.getWriter().flush();
                 log.error("token格式错误", e);
             }catch(MalformedJwtException e){
                 httpServletResponse.getWriter().println(ResultUtil.error(ResultCodeEnum.TOKEN_MALFORMED));
+                httpServletResponse.getWriter().flush();
                 log.error("token没有被正确构造", e);
             }catch(SignatureException e){
                 httpServletResponse.getWriter().println(ResultUtil.error(ResultCodeEnum.TOKEN_SIGNATURE));
+                httpServletResponse.getWriter().flush();
                 log.error("token签名失败", e);
             }catch(IllegalArgumentException e){
-                httpServletResponse.getWriter().println(ResultUtil.error(ResultCodeEnum.TOKEN_ILLEGAL_ARGUMENT));
+                httpServletResponse.getWriter()
+                                   .println(ResultUtil.error(ResultCodeEnum.TOKEN_ILLEGAL_ARGUMENT));
+                httpServletResponse.getWriter().flush();
                 log.error("token非法参数异常", e);
             }catch(Exception e){
                 httpServletResponse.getWriter().println(ResultUtil.error(ResultCodeEnum.TOKEN_ERROR));
-                log.error("Invalid Token", e);
-            }finally{
                 httpServletResponse.getWriter().flush();
+                log.error("Invalid Token", e);
             }
         }else{
-            SecurityContextHolder.clearContext();
-            httpServletResponse.getWriter().println(ResultUtil.error(ResultCodeEnum.USER_NOT_LOGIN));
-            httpServletResponse.getWriter().flush();
-            return;
-        } filterChain.doFilter(httpServletRequest, httpServletResponse);
+            // SecurityContextHolder.clearContext();
+            // httpServletResponse.getWriter().println(ResultUtil.error(ResultCodeEnum.USER_NOT_LOGIN));
+            // httpServletResponse.getWriter().flush();
+            // log.error(ResultUtil.error(ResultCodeEnum.USER_NOT_LOGIN));
+            // return;
+        }
+        filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 }

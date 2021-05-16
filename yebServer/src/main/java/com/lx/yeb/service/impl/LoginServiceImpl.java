@@ -6,7 +6,7 @@ import com.lx.yeb.dao.NavigationDao;
 import com.lx.yeb.dao.YebUserDao;
 import com.lx.yeb.dto.UserInfoDTO;
 import com.lx.yeb.service.LoginService;
-import com.lx.yeb.service.UserDetailsServiceImpl;
+import com.lx.yeb.security.UserDetailsServiceImpl;
 import com.lx.yeb.utils.JwtUtil;
 import com.lx.yeb.utils.ResultCodeEnum;
 import com.lx.yeb.utils.ResultUtil;
@@ -53,15 +53,6 @@ public class LoginServiceImpl implements LoginService{
      */
     @Override
     public String verifyLogin(YebUser u){
-        System.out.println(u);
-        // int exist = yebUserDao.existUser(u);
-        // if(exist == 0){
-        //     return ResultUtil.result(ResultCodeEnum.ADMIN_NOT_EXISTS);
-        // }
-        // YebUser yebUser = yebUserDao.verifyLogin(u);
-        // if(yebUser == null){
-        //     return ResultUtil.result(ResultCodeEnum.PASSWORD_ERROR);
-        // }
         UserDetails yebUser = userDetailsService.loadUserByUsername(u.getUsername());
         if(passwordEncoder.matches(u.getPassword(), yebUser.getPassword())){
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(yebUser, null, yebUser

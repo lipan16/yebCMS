@@ -17,14 +17,13 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object>{
 
     @Override
     public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> aClass){
-        log.info("---启用ResponseBodyAdvice拦截---");
         return true;
     }
 
     // 拦截response输出处理
     @Override
     public Object beforeBodyWrite(Object o, MethodParameter methodParameter, MediaType mediaType, Class<? extends HttpMessageConverter<?>> aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse){
-        log.info("ResponseBodyAdvice开始拦截response返回请求: {}", o);
+        log.info("GlobalResponseHandler拦截response返回请求: {}", o);
         return o;
     }
 }

@@ -51,7 +51,6 @@ public class UserDetailsServiceImpl implements UserDetailsService{
             SimpleGrantedAuthority sga = new SimpleGrantedAuthority("ROLE_" + each.trim());
             list.add(sga);
         }
-        System.out.println("查询用户的角色权限是" + list.toString());
 
         // 查询用户成功，需匹配用户密码，由security内部实现，只需要把查询的用户名正确密码返回即可
         return new YebUserDetails(yebUser.getUsername(), yebUser.getPassword(), list);

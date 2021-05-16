@@ -63,6 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
             .cors().and()
             // 基于token不需要session
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.headers().cacheControl();
 
         http.formLogin().successHandler((request, response, authentication) -> {
             response.setContentType("application/json;charset=utf-8");
@@ -86,17 +87,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         // 验证所有请求
         http.authorizeRequests()
             // 允许访问网站静态资源
-            // .antMatchers("/favicon.ico", "/swagger-ui/**").permitAll()
+            .antMatchers("/swagger-ui/**").permitAll()
             // 测试
-            .antMatchers("/api/menu").permitAll().antMatchers("/api/hello").hasRole("admin")
+            .antMatchers("/api/menu").permitAll().antMatchers("/api/hello").hasRole("admins")
             // 允许登录访问
             .antMatchers("/api/login", "/api/logout").permitAll()
             // 除了上面的所有请求都要验证
             .anyRequest().authenticated();
 
-        // http.formLogin();
-
-        http.headers().cacheControl();
         // 添加jwt验证请求过滤器
         http.addFilterBefore(JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
@@ -124,7 +122,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     // JWT验证请求过滤器
     @Bean
     JwtAuthenticationFilter JwtAuthenticationFilter() throws Exception{
-        return new JwtAuthenticationFilter(authenticationManager());
+        return new JwtAuthenticationFilter();
     }
 
     // @Bean
