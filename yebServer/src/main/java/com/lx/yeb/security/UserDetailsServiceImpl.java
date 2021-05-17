@@ -15,9 +15,10 @@ import java.util.List;
 
 /**
  * fetch 重写 spring security 的 UserDetailsService
+ *
+ * @param
  * @author lipan
  * @date 2021/5/9 21:36
- * @param
  * @return
  */
 @Service
