@@ -26,7 +26,7 @@ public class JwtUtil{
     // 密钥
     private static final String SECRET     = "suokou@hunan";
     // 过期时间 30min
-    private static final long   EXPIRATION = 30 * 1000 * 60;
+    private static final long   EXPIRATION = 1 * 1000 * 60;
 
     /**
      * fetch 创建token

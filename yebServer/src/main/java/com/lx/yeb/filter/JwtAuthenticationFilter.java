@@ -1,5 +1,6 @@
 package com.lx.yeb.filter;
 
+import com.lx.yeb.config.SecurityConfig;
 import com.lx.yeb.security.UserDetailsServiceImpl;
 import com.lx.yeb.utils.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * @ClassName JwtAuthenticationFilter  JWT验证请求过滤器
@@ -35,7 +37,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
         log.info("spring security JWT验证请求过滤器");
         httpServletResponse.setContentType("application/json;charset=utf-8");
 
+        String url   = httpServletRequest.getRequestURI();
         String token = httpServletRequest.getHeader("Authorization");
+        if(Arrays.asList(SecurityConfig.AUTH_WHITELIST).contains(url)){
+            filterChain.doFilter(httpServletRequest, httpServletResponse);
+            return;
+        }
+
         // 存在token
         if(StringUtils.hasText(token)){
             String username = JwtUtil.getUsernameByToken(token);
@@ -54,12 +62,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                     SecurityContextHolder.getContext().setAuthentication(uPAT);
                 }
             }
-        }else{
-            // SecurityContextHolder.clearContext();
-            // httpServletResponse.getWriter().println(ResultUtil.error(ResultCodeEnum.USER_NOT_LOGIN));
-            // httpServletResponse.getWriter().flush();
-            // log.error(ResultUtil.error(ResultCodeEnum.USER_NOT_LOGIN));
-            // return;
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
