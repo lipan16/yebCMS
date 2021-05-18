@@ -30,9 +30,9 @@ import java.util.List;
 public class LoginServiceImpl implements LoginService{
 
     @Resource
-    private YebUserDao    yebUserDao;
+    private YebUserDao             yebUserDao;
     @Resource
-    private NavigationDao navigationDao;
+    private NavigationDao          navigationDao;
     @Resource
     private UserDetailsServiceImpl userDetailsService;
     @Resource
