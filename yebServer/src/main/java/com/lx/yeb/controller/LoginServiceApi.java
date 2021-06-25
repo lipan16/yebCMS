@@ -32,7 +32,6 @@ public class LoginServiceApi{
 
     // @ApiOperation("获取验证码图片")
     @GetMapping(path = "/verifyImg")
-    // @PreAuthorize("hasAuthority('sys:add')")
     public void getVerifyImg(HttpServletRequest request, HttpServletResponse response){
         try{
             response.setContentType("image/jpeg");// 设置相应类型,告诉浏览器输出的内容为图片
@@ -59,8 +58,6 @@ public class LoginServiceApi{
         return loginService.verifyLogin(yebUser);
     }
 
-
-
     // @ApiOperation(value = "退出登录")
     @PostMapping("/logout")
     public String logout(){
@@ -81,25 +78,13 @@ public class LoginServiceApi{
         return loginService.refreshToken(yebUser);
     }
 
-    // @ApiOperation(value = "获取当前用户的菜单栏")
-    // @PostMapping(path = "/menu")
-    // public String menu(@RequestBody UserVO userVO){
-    //     log.info("[前端接口调用]: /api/menu");
-    //     YebUser yebUser = new YebUser();
-    //     BeanUtils.copyProperties(userVO, yebUser, YebUser.class);
-    //     return loginService.menu(yebUser);
-    // }
-
-    // @ApiOperation(value = "获取当前用户的菜单栏")
-    @GetMapping(path = "/menu")
-    public String getMenu(){
+    @ApiOperation(value = "获取当前用户的菜单栏")
+    @PostMapping(path = "/menu")
+    public String menu(@RequestBody UserVO userVO){
         log.info("[前端接口调用]: /api/menu");
         YebUser yebUser = new YebUser();
+        BeanUtils.copyProperties(userVO, yebUser, YebUser.class);
         return loginService.menu(yebUser);
     }
 
-    @GetMapping(path = "/hello")
-    public String getHello(){
-        return "hello";
-    }
 }
