@@ -39,7 +39,11 @@ public class UserDetailsServiceImpl implements UserDetailsService{
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
         log.info("账号认证中: {}", username);
-        YebUser yebUser = loginService.findUserByUsername(username);
+        // YebUser yebUser = loginService.findUserByUsername(username);
+        YebUser yebUser = new YebUser(); // 专供离线测试
+        yebUser.setUsername("lipan");
+        yebUser.setPassword("$2a$10$Qv4q1FHEEQeBZ1cloaRLNuCkyj/3okGDHd9Q6DQxk/u7CFoAoDEUG");
+        yebUser.setRole("admin");
         if(null == yebUser){
             throw new UsernameNotFoundException("用户名不存在");
         }
