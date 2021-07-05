@@ -3,6 +3,7 @@ package com.lx.yeb;
 
 import com.lx.yeb.bean.YebUser;
 import com.lx.yeb.service.LoginService;
+import org.jasypt.encryption.StringEncryptor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,8 +20,18 @@ import javax.annotation.Resource;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class YebApplicationTest{
     @Resource
-    LoginService loginService;
+    private LoginService loginService;
 
+    @Resource
+    private StringEncryptor stringEncryptor;
+
+    // @Test
+    void contextLoads() {
+        String accessKey = stringEncryptor.encrypt("root");
+        String secretKey = stringEncryptor.encrypt("Mysql@3216");
+        System.out.println("加密后账号："+ accessKey);
+        System.out.println("加密后密码："+ secretKey);
+    }
 
     @Test
     public void passwordEncoder(){

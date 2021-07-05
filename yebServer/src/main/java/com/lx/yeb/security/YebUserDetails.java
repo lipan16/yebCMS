@@ -13,10 +13,15 @@ import java.util.Collection;
  * @Date 2021/5/9 21:21
  * @Version 1.0
  */
+
 public class YebUserDetails implements UserDetails{
     private static final long                                   serialVersionUID = 2132320336427812494L;
     private              String                                 username;
     private              String                                 password;
+    private              String                                 icon;
+    private              String                                 role;
+    // 账户是不是可用 true: 可用
+    private              boolean                                enabled;
     private              Collection<? extends GrantedAuthority> authorities;
     // 账号是否未过期 true: 未过期
     private              boolean                                accountNonExpired;
@@ -24,22 +29,31 @@ public class YebUserDetails implements UserDetails{
     private              boolean                                accountNonLocked;
     // 密码是否未过期
     private              boolean                                credentialsNonExpired;
-    // 账户是不是可用 true: 可用
-    private              boolean                                enabled;
 
-    public YebUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities){
-        this(username, password, true, true, true, true, authorities);
+
+    public YebUserDetails(String username, String password, String icon, String role, boolean enabled, Collection<? extends GrantedAuthority> authorities){
+        this(username, password, icon, role, enabled, true, true, true, authorities);
     }
 
-    public YebUserDetails(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities){
+    public YebUserDetails(String username, String password, String icon, String role, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities){
         Assert.isTrue(username != null && !"".equals(username) && password != null, "Cannot pass null or empty values to constructor");
         this.username = username;
         this.password = password;
+        this.icon = icon;
+        this.role = role;
         this.enabled = enabled;
         this.accountNonExpired = accountNonExpired;
         this.credentialsNonExpired = credentialsNonExpired;
         this.accountNonLocked = accountNonLocked;
         this.authorities = authorities;
+    }
+
+    public String getIcon(){
+        return icon;
+    }
+
+    public String getRole(){
+        return role;
     }
 
     @Override
