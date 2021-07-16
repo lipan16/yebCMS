@@ -46,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     // 允许访问登录接口、网站静态资源、swagger3 /webjars/**
     public static final String[] AUTH_WHITELIST = {"/api/login",
                                                    "/api/logout",
+                                                   "/api/lipan/**",
                                                    "/swagger-ui/**",
                                                    "/swagger-resources/**",
                                                    "/v3/api-docs"
