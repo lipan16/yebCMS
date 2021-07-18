@@ -4,7 +4,6 @@ package com.lx.yeb;
 import com.lx.yeb.bean.YebUser;
 import com.lx.yeb.service.LoginService;
 import org.jasypt.encryption.StringEncryptor;
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -28,19 +27,19 @@ public class YebApplicationTest{
     // @Test
     void contextLoads() {
         String accessKey = stringEncryptor.encrypt("root");
-        String secretKey = stringEncryptor.encrypt("Mysql@3216");
+        String secretKey = stringEncryptor.encrypt("suokou@hunan");
         System.out.println("加密后账号："+ accessKey);
         System.out.println("加密后密码："+ secretKey);
     }
 
-    @Test
+    // @Test
     public void passwordEncoder(){
         BCryptPasswordEncoder pwdEncoder = new BCryptPasswordEncoder();
         String pwd = pwdEncoder.encode("lipan");
         System.out.println(pwd);
     }
 
-    @Test
+    // @Test
     public void findUserByUsername(){
         YebUser yebUser = loginService.findUserByUsername("lipan");
         System.out.println(yebUser);

@@ -5,14 +5,14 @@ import com.lx.yeb.bean.YebUser;
 import com.lx.yeb.dao.NavigationDao;
 import com.lx.yeb.dao.YebUserDao;
 import com.lx.yeb.dto.UserInfoDTO;
-import com.lx.yeb.service.LoginService;
 import com.lx.yeb.security.UserDetailsServiceImpl;
+import com.lx.yeb.security.YebUserDetails;
+import com.lx.yeb.service.LoginService;
 import com.lx.yeb.utils.JwtUtil;
 import com.lx.yeb.utils.ResultCodeEnum;
 import com.lx.yeb.utils.ResultUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -53,15 +53,17 @@ public class LoginServiceImpl implements LoginService{
      */
     @Override
     public String verifyLogin(YebUser u){
-        UserDetails yebUser = userDetailsService.loadUserByUsername(u.getUsername());
-        if(passwordEncoder.matches(u.getPassword(), yebUser.getPassword())){
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(yebUser, null, yebUser
+        YebUserDetails yebUserDetails = userDetailsService.loadUserByUsername(u.getUsername());
+        if(passwordEncoder.matches(u.getPassword(), yebUserDetails.getPassword())){
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(yebUserDetails, null, yebUserDetails
                     .getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             UserInfoDTO result = new UserInfoDTO();
-            String      token  = JwtUtil.createToken(yebUser.getUsername());
-            result.setUsername(yebUser.getUsername());
-            result.setToken(token);
+
+            result.setUsername(yebUserDetails.getUsername());
+            result.setIcon(yebUserDetails.getIcon());
+            result.setAuthority(yebUserDetails.getRole());
+            result.setToken(JwtUtil.createToken(yebUserDetails.getUsername()));
             return ResultUtil.result(ResultCodeEnum.SUCCESS, result);
         }else{
             return ResultUtil.error(ResultCodeEnum.PASSWORD_ERROR);

@@ -1,6 +1,7 @@
 package com.lx.yeb.controller;
 
 import com.lx.yeb.bean.YebUser;
+import com.lx.yeb.service.AsyncService;
 import com.lx.yeb.service.LoginService;
 import com.lx.yeb.utils.ResultCodeEnum;
 import com.lx.yeb.utils.ResultUtil;
@@ -11,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +34,15 @@ import javax.annotation.Resource;
 public class LoginServiceApi{
     @Resource
     private LoginService loginService;
+    @Resource
+    private AsyncService asyncService;
+
+    // 测试异步线程
+    @GetMapping("/lipan/async")
+    public void async(){
+        asyncService.executeAsync();
+    }
+
 
     // @ApiOperation("获取验证码图片")
     // @GetMapping(path = "/verifyImg")

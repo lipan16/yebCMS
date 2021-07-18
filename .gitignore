@@ -1,11 +1,13 @@
+# 生产配置文件
+./yebServer/src/main/resources/application-release.properties
+./yebServer/src/main/resources/shell/yebServer.sh
+
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-# 生产配置文件
-./yebServer/src/main/resources/application-release.properties
 
 
 ### STS ###
