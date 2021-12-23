@@ -4,6 +4,7 @@ package com.lx.yeb;
 import com.lx.yeb.bean.YebUser;
 import com.lx.yeb.service.LoginService;
 import org.jasypt.encryption.StringEncryptor;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -25,17 +26,17 @@ public class YebApplicationTest{
     private StringEncryptor stringEncryptor;
 
     // @Test
-    void contextLoads() {
+    void contextLoads(){
         String accessKey = stringEncryptor.encrypt("root");
         String secretKey = stringEncryptor.encrypt("suokou@hunan");
-        System.out.println("加密后账号："+ accessKey);
-        System.out.println("加密后密码："+ secretKey);
+        System.out.println("加密后账号：" + accessKey);
+        System.out.println("加密后密码：" + secretKey);
     }
 
     // @Test
     public void passwordEncoder(){
         BCryptPasswordEncoder pwdEncoder = new BCryptPasswordEncoder();
-        String pwd = pwdEncoder.encode("lipan");
+        String                pwd        = pwdEncoder.encode("lipan");
         System.out.println(pwd);
     }
 
@@ -43,5 +44,23 @@ public class YebApplicationTest{
     public void findUserByUsername(){
         YebUser yebUser = loginService.findUserByUsername("lipan");
         System.out.println(yebUser);
+    }
+
+    @Test
+    public void test(){
+        int[] a = new int[]{2, 0, 2, 1, 1, 0};
+        int min, temp;
+        for(int i = 0; i < a.length; i++){
+            min = i;
+            for(int j = i; j < a.length; j++){
+                if(a[i] > a[j]){
+                    min = j;
+                }
+            }
+            temp = a[i];
+            a[i] = a[min];
+            a[min] = temp;
+        }
+        System.out.println(a);
     }
 }
