@@ -24,6 +24,7 @@ import java.lang.reflect.Type;
 @Slf4j
 @ControllerAdvice(annotations = {Controller.class, RestController.class})
 public class GlobalRequestHandler implements RequestBodyAdvice{
+    //是否开启
     @Override
     public boolean supports(MethodParameter methodParameter, Type type, Class<? extends HttpMessageConverter<?>> aClass){
         return false;

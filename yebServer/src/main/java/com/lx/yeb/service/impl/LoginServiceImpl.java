@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -58,13 +59,13 @@ public class LoginServiceImpl implements LoginService{
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(yebUserDetails, null, yebUserDetails
                     .getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            UserInfoDTO result = new UserInfoDTO();
+            UserInfoDTO userInfoDTO = new UserInfoDTO();
 
-            result.setUsername(yebUserDetails.getUsername());
-            result.setIcon(yebUserDetails.getIcon());
-            result.setAuthority(yebUserDetails.getRole());
-            result.setToken(JwtUtil.createToken(yebUserDetails.getUsername()));
-            return ResultUtil.result(ResultCodeEnum.SUCCESS, result);
+            userInfoDTO.setUsername(yebUserDetails.getUsername());
+            userInfoDTO.setIcon(yebUserDetails.getIcon());
+            userInfoDTO.setAuthority(yebUserDetails.getRole());
+            userInfoDTO.setToken(JwtUtil.createToken(yebUserDetails.getUsername()));
+            return ResultUtil.success(userInfoDTO);
         }else{
             return ResultUtil.error(ResultCodeEnum.PASSWORD_ERROR);
         }
@@ -84,13 +85,13 @@ public class LoginServiceImpl implements LoginService{
         String      token  = JwtUtil.createToken(yebUser.getUsername());
         result.setUsername(yebUser.getUsername());
         result.setToken(token);
-        return ResultUtil.result(ResultCodeEnum.SUCCESS, result);
+        return ResultUtil.success(result);
     }
 
     @Override
     public String menu(YebUser yebUser){
         List<Navigation> navigationList = recursionMenu(0);
-        return ResultUtil.result(ResultCodeEnum.SUCCESS, navigationList);
+        return ResultUtil.success(navigationList);
     }
 
     /**
@@ -104,7 +105,7 @@ public class LoginServiceImpl implements LoginService{
     private List<Navigation> recursionMenu(Integer parentId){
         List<Navigation> navigationList = navigationDao.selectByParentId(parentId);
         if(navigationList.isEmpty()){
-            return null;
+            return Collections.emptyList();
         }
         for(Navigation nav : navigationList){
             nav.setChildren(recursionMenu(nav.getId()));

@@ -43,3 +43,5 @@ build/
 mvnw
 mvnw.cmd
 .mvn
+/yebServer/src/main/resources/shell/yebServer.sh
+/yebServer/src/main/resources/springboot.pfx

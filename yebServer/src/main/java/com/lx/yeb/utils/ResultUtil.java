@@ -15,53 +15,7 @@ import java.util.Map;
  */
 public class ResultUtil{
     public static String FLAGS = "flags"; // 返回码
-    public static String INFO  = "info"; // 返回状态消息
-    public static String DATA = "data"; // 返回数据
-
-    /**
-     * fetch 返回响应码、提示信息
-     *
-     * @param resultCodeEnum
-     * @return java.lang.String
-     * @author lipan
-     * @date 2021/3/18 10:40
-     */
-    public static String result(ResultCodeEnum resultCodeEnum){
-        Map<String, Object> map = new HashMap<>(4);
-        map.put(FLAGS, resultCodeEnum.getFlags());
-        map.put(INFO, resultCodeEnum.getInfo());
-        ObjectMapper mapper  = new ObjectMapper();
-        String       jsonStr = null;
-        try{
-            jsonStr = mapper.writeValueAsString(map);
-        }catch(JsonProcessingException e){
-            e.printStackTrace();
-        }
-        return jsonStr;
-    }
-
-    /**
-     * fetch 返回响应码、提示信息、数据
-     *
-     * @param resultCodeEnum, data]
-     * @return java.lang.String
-     * @author lipan
-     * @date 2021/3/18 10:43
-     */
-    public static String result(ResultCodeEnum resultCodeEnum, Object data){
-        Map<String, Object> map = new HashMap<>(4);
-        map.put(FLAGS, resultCodeEnum.getFlags());
-        map.put(INFO, resultCodeEnum.getInfo());
-        map.put(DATA, data);
-        ObjectMapper mapper  = new ObjectMapper();
-        String       jsonStr = null;
-        try{
-            jsonStr = mapper.writeValueAsString(map);
-        }catch(JsonProcessingException e){
-            e.printStackTrace();
-        }
-        return jsonStr;
-    }
+    public static String INFO  = "info"; // 返回数据 、错误信息、状态消息
 
     /**
      * fetch 返回无参的成功响应
@@ -70,7 +24,7 @@ public class ResultUtil{
      * @author lipan
      * @date 2021/3/18 10:46
      */
-    public static String ok(){
+    public static String success(){
         Map<String, Object> map = new HashMap<>(4);
         map.put(FLAGS, ResultCodeEnum.SUCCESS.getFlags());
         map.put(INFO, ResultCodeEnum.SUCCESS.getInfo());
@@ -92,11 +46,10 @@ public class ResultUtil{
      * @author lipan
      * @date 2021/3/18 10:45
      */
-    public static String ok(Object data){
+    public static String success(Object data){
         Map<String, Object> map = new HashMap<>(4);
         map.put(FLAGS, ResultCodeEnum.SUCCESS.getFlags());
-        map.put(INFO, ResultCodeEnum.SUCCESS.getInfo());
-        map.put(DATA, data);
+        map.put(INFO, data);
         ObjectMapper mapper  = new ObjectMapper();
         String       jsonStr = null;
         try{

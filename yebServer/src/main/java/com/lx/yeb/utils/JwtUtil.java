@@ -1,12 +1,8 @@
 package com.lx.yeb.utils;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
@@ -26,7 +22,7 @@ public class JwtUtil{
     // 密钥
     private static final String SECRET     = "suokou@hunan";
     // 过期时间 30min
-    private static final long   EXPIRATION = 30 * 1000 * 60;
+    private static final long   EXPIRATION = 30 * 60 * 1000;
     /**
      * fetch 创建token
      *
@@ -69,10 +65,8 @@ public class JwtUtil{
                               .parseClaimsJws(token)
                               .getBody();
             return body.get("username").toString();
-        }catch(ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e){ // token已过期
+        }catch(Exception e){ // token已过期
             // token已过期, token格式错误, token没有被正确构造, token签名失败, token非法参数异常
-            throw e;
-        }catch(Exception e){
             throw e;
         }
     }

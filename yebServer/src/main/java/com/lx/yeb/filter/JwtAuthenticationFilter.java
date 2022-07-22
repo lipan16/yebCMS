@@ -39,6 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 
         String url   = httpServletRequest.getRequestURI();
         String token = httpServletRequest.getHeader("Authorization");
+        //非token白名单接口
         if(Arrays.asList(SecurityConfig.AUTH_WHITELIST).contains(url)){
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;

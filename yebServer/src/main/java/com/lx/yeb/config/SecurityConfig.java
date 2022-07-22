@@ -1,6 +1,5 @@
 package com.lx.yeb.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lx.yeb.filter.JwtAuthenticationFilter;
 import com.lx.yeb.security.UserDetailsServiceImpl;
 import com.lx.yeb.utils.ResultCodeEnum;
@@ -25,7 +24,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * @ClassName SecurityConfig
@@ -43,8 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Resource
     private UserDetailsServiceImpl userDetailsService;
 
-    // 允许访问登录接口、网站静态资源、swagger3 /webjars/**
+    // 允许非token访问的白名单接口：登录接口、网站静态资源、swagger3 /webjars/**
     public static final String[] AUTH_WHITELIST = {"/api/login",
+                                                   "/api/get",
                                                    "/api/logout",
                                                    "/api/lipan/**",
                                                    "/swagger-ui/**",
@@ -68,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
-        log.info("security授权配置");
+        log.info("security：授权请求配置");
         // 使用jwt不需要csrf
         http.csrf().disable()
             // 防止iframe 造成跨域
@@ -79,40 +78,42 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.headers().cacheControl();
 
-        http.formLogin().successHandler((request, response, authentication) -> {
-            response.setContentType("application/json;charset=utf-8");
-            PrintWriter pw = response.getWriter();
-            pw.write(new ObjectMapper().writeValueAsString(authentication.getPrincipal()));
-            pw.flush();
-            pw.close();
-        }).failureHandler((request, response, exception) -> {
-            response.setContentType("application/json;charset=utf-8");
-            PrintWriter pw = response.getWriter();
-            pw.write(new ObjectMapper().writeValueAsString(exception.getMessage()));
-            pw.flush();
-            pw.close();
-        }).and().logout().logoutUrl("/api/logout").logoutSuccessHandler((request, response, exception) -> {
-            response.setContentType("application/json;charset=utf-8");
-            PrintWriter pw = response.getWriter();
-            pw.write(new ObjectMapper().writeValueAsString("退出登录"));
-            pw.flush();
-            pw.close();
-        });
+        // http.formLogin().successHandler((request, response, authentication) -> {
+        //     response.setContentType("application/json;charset=utf-8");
+        //     PrintWriter pw = response.getWriter();
+        //     pw.write(new ObjectMapper().writeValueAsString(authentication.getPrincipal()));
+        //     pw.flush();
+        //     pw.close();
+        // }).failureHandler((request, response, exception) -> {
+        //     response.setContentType("application/json;charset=utf-8");
+        //     PrintWriter pw = response.getWriter();
+        //     pw.write(new ObjectMapper().writeValueAsString(exception.getMessage()));
+        //     pw.flush();
+        //     pw.close();
+        // }).and().logout().logoutUrl("/api/logout").logoutSuccessHandler((request, response, exception) -> {
+        //     response.setContentType("application/json;charset=utf-8");
+        //     PrintWriter pw = response.getWriter();
+        //     pw.write(new ObjectMapper().writeValueAsString("退出登录"));
+        //     pw.flush();
+        //     pw.close();
+        // });
+
         // 验证所有请求
-        http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll()
+
+        http.authorizeRequests()
+            .antMatchers(AUTH_WHITELIST).permitAll()
             // 测试
-            .antMatchers("/api/menu").permitAll().antMatchers("/api/hello").hasRole("admins")
+            .antMatchers("/api/hello").hasRole("admins")
             // 除了上面的所有请求都要验证
             .anyRequest().authenticated();
 
         // 添加jwt验证请求过滤器
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        // 添加自定义未授权，未登录结果返回
-        http.exceptionHandling()
-            .accessDeniedHandler(new RestfulAccessDeniedHandler())
-            .authenticationEntryPoint(new RestAuthenticationEntryPoint());
-
+        // // 添加自定义未授权，未登录结果返回
+        // http.exceptionHandling()
+        //     .accessDeniedHandler(new RestfulAccessDeniedHandler())
+        //     .authenticationEntryPoint(new RestAuthenticationEntryPoint());
     }
 
     /**

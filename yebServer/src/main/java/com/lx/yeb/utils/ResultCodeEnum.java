@@ -9,7 +9,7 @@ package com.lx.yeb.utils;
  */
 public enum ResultCodeEnum{
     SUCCESS(200, "success"),
-    SUCCESS_LOGOUT(200, "注销成功"),
+
     USER_EXIST(1001, "用户已存在"),
     USERNAME_NOT_EXISTS(1002, "用户名不存在"),
     PASSWORD_ERROR(1003, "密码错误"),
@@ -31,9 +31,9 @@ public enum ResultCodeEnum{
     FAILURE(9999, "fail");
 
     // 结果状态码
-    private Integer flags;
+    private final Integer flags;
     // 结果消息
-    private String  info;
+    private final String  info;
 
     ResultCodeEnum(Integer flags, String info){
         this.flags = flags;

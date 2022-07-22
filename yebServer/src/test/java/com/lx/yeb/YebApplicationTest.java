@@ -1,6 +1,5 @@
 package com.lx.yeb;
 
-
 import com.lx.yeb.bean.YebUser;
 import com.lx.yeb.service.LoginService;
 import org.jasypt.encryption.StringEncryptor;
@@ -9,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 
 /**
  * @ClassName YebApplicationTest
@@ -25,7 +25,7 @@ public class YebApplicationTest{
     @Resource
     private StringEncryptor stringEncryptor;
 
-    // @Test
+    @Test
     void contextLoads(){
         String accessKey = stringEncryptor.encrypt("root");
         String secretKey = stringEncryptor.encrypt("suokou@hunan");
@@ -49,11 +49,11 @@ public class YebApplicationTest{
     @Test
     public void test(){
         int[] a = new int[]{2, 0, 2, 1, 1, 0};
-        int min, temp;
+        int   min, temp;
         for(int i = 0; i < a.length; i++){
             min = i;
-            for(int j = i; j < a.length; j++){
-                if(a[i] > a[j]){
+            for(int j = i + 1; j < a.length; j++){
+                if(a[min] > a[j]){
                     min = j;
                 }
             }
@@ -61,6 +61,6 @@ public class YebApplicationTest{
             a[i] = a[min];
             a[min] = temp;
         }
-        System.out.println(a);
+        System.out.println(Arrays.toString(a));
     }
 }
