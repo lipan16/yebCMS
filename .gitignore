@@ -1,6 +1,6 @@
 # 生产配置文件
-./yebServer/src/main/resources/application-release.properties
-./yebServer/src/main/resources/shell/yebServer.sh
+/yebServer/src/main/resources/application-release.properties
+/yebServer/src/main/resources/shell/yebServer.sh
 
 HELP.md
 target/
@@ -43,5 +43,3 @@ build/
 mvnw
 mvnw.cmd
 .mvn
-/yebServer/src/main/resources/shell/yebServer.sh
-/yebServer/src/main/resources/springboot.pfx

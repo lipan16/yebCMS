@@ -43,7 +43,6 @@ public class LoginServiceApi{
         asyncService.executeAsync();
     }
 
-
     // @ApiOperation("获取验证码图片")
     // @GetMapping(path = "/verifyImg")
     // public void getVerifyImg(HttpServletRequest request, HttpServletResponse response){
@@ -79,18 +78,13 @@ public class LoginServiceApi{
         return ResultUtil.success("注销成功");
     }
 
-    // @ApiOperation(value = "刷新token")
-    // @ApiImplicitParam(name = "userVO", value = "登录的视图对象", required = true, dataType = "UserVO", dataTypeClass = UserVO.class)
-    // @PostMapping(path = "/refreshToken")
-    // public String refreshToken(@RequestBody UserVO userVO){
-    //     log.info("[前端接口调用]: /api/refreshToken");
-    //     YebUser yebUser = new YebUser();
-    //     BeanUtils.copyProperties(userVO, yebUser, YebUser.class);
-    //     if(!StringUtils.hasText(yebUser.getUsername())){
-    //         return ResultUtil.success(ResultCodeEnum.TOKEN_REFRESH_FAILED);
-    //     }
-    //     return loginService.refreshToken(yebUser);
-    // }
+    @ApiOperation(value = "刷新token")
+    @GetMapping(path = "/refreshToken")
+    public String refreshToken(){
+        log.info("[前端接口调用]: /api/refreshToken");
+        YebUser yebUser = new YebUser();
+        return loginService.refreshToken(yebUser);
+    }
 
     @ApiOperation(value = "获取当前用户的菜单栏")
     @PostMapping(path = "/nav")

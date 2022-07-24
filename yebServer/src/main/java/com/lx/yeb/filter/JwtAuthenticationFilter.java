@@ -49,16 +49,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
         if(StringUtils.hasText(token)){
             String username = JwtUtil.getUsernameByToken(token);
             // token存在用户名但是未登录
-            if(StringUtils.hasText(username) && null == SecurityContextHolder.getContext()
-                                                                             .getAuthentication()){
+            if(StringUtils.hasText(username) && null == SecurityContextHolder.getContext().getAuthentication()){
                 // 登录
-                log.info("security has userinfo");
+                log.info("security has userinfo: token存在用户名但是未登录");
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 // 验证token是否有效
                 if(null != userDetails){
                     //将认证信息放到SpringSecurity上下文中，给后续的SpringSecurity鉴权使用，如果不放，SpringSecurity就不能鉴权
-                    UsernamePasswordAuthenticationToken uPAT = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails
-                            .getAuthorities());
+                    UsernamePasswordAuthenticationToken uPAT = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     uPAT.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                     SecurityContextHolder.getContext().setAuthentication(uPAT);
                 }

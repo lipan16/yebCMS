@@ -119,7 +119,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     /**
      * fetch 告诉security加密方式
      *
-     * @param []
      * @return org.springframework.security.crypto.password.PasswordEncoder
      * @author lipan
      * @date 2021/5/16 17:50
@@ -132,7 +131,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     /**
      * fetch JWT验证请求过滤器
      *
-     * @param []
      * @return com.lx.yeb.filter.JwtAuthenticationFilter
      * @author lipan
      * @date 2021/5/16 17:50
